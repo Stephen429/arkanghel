@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ang Arkanghel | Official Publication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --accent: #dc3545;
+            --bg: #f8f9fa;
+            --text: #1a1a1a;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+            --icon-color: #1a1a1a;
+            --border: rgba(0,0,0,0.08);
+        }
+        body.dark-mode { 
+            --bg: #0f0f0f; 
+            --text: #e0e0e0; 
+            --card-bg: #161616; 
+            --icon-color: #e0e0e0;
+            --border: rgba(255,255,255,0.08);
+        }
+        
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: background 0.3s, color 0.3s; }
+        h1, h2, h3 { font-family: 'Lora', serif; }
+
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--border); }
+        
+        /* Carousel - Sharp & Taller */
+        .carousel-wrapper { width: 100%; max-width: 900px; margin: 2rem auto 1rem auto; }
+        .carousel-container { position: relative; width: 100%; height: 380px; overflow: hidden; }
+        .carousel-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: flex-end; padding: 2.5rem; box-sizing: border-box; color: white; }
+        .carousel-slide.active { opacity: 1; }
+        
+        /* Indicators */
+        .carousel-indicators { display: flex; justify-content: center; gap: 8px; margin-top: 0.75rem; }
+        .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--accent); transform: scale(1.2); }
+        
+        /* Layout Grid */
+        main { max-width: 900px; margin: 0 auto; padding: 0 1rem; }
+        section { margin-bottom: 2.5rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
+        
+        /* Compact Card Feed */
+        .compact-list { display: grid; gap: 10px; }
+        .compact-card { display: flex; gap: 15px; background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: var(--shadow); align-items: center; border: 1px solid var(--border); }
+        .img-thumb { width: 90px; height: 70px; background: #eee; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #aaa; }
+        body.dark-mode .img-thumb { background: #222; }
+        .compact-card h3 { font-size: 1rem; margin: 0 0 4px 0; line-height: 1.3; }
+        .compact-card p { font-size: 0.85rem; margin: 0; opacity: 0.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Navigation Quick Buttons Section */
+        .utility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 3rem; }
+        .util-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 8px; font-weight: 500; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: 0.2s; }
+        .util-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        footer { text-align: center; padding: 3rem; font-size: 0.9rem; opacity: 0.7; border-top: 1px solid var(--border); margin-top: 3rem; }
+        button { cursor: pointer; border: none; background: transparent; color: var(--icon-color); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="font-size: 1.5rem; font-weight: 700; font-family: 'Lora'; color: var(--accent);">ANG ARKANGHEL</div>
+    <div style="display: flex; gap: 15px;">
+        <button id="theme-toggle"><i data-lucide="sun" id="theme-icon"></i></button>
+        <button id="menu-toggle"><i data-lucide="menu"></i></button>
+    </div>
+</header>
+
+<section class="welcome" style="text-align: center; padding: 3rem 5% 1rem 5%;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">The Voice of the Trade School</h1>
+    <p style="opacity: 0.8; margin: 0;">Official Student Publication Website</p>
+</section>
+
+<!-- Sharp-Cornered Rectangular Taller Carousel -->
+<div class="carousel-wrapper">
+    <div class="carousel-container">
+        <div class="carousel-slide active" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #dc3545;">
+            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">Project GLASS Initiative Launched</h2><p>Advancing structural transparency and student access within the learner government.</p></div>
+        </div>
+        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #222;">
+            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">15th Foundation Day Celebrations Begin</h2><p>A grand display of trade pathways, cultural events, and foundational pride.</p></div>
+        </div>
+        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #444;">
+            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">Student Journalists Bag Divisional Awards</h2><p>Representing excellence in editorial writing and school paper layout design.</p></div>
+        </div>
+    </div>
+    <div class="carousel-indicators" id="carousel-indicators"></div>
+</div>
+
+<main>
+    <!-- NEWS SECTION -->
+    <section>
+        <div class="section-header"><h2>Latest News</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="image"></i></div><div><h3>Library Wing Now Open for Research</h3><p>Equipped with updated reference books and modern computing stations for assignment loads.</p></div></article>
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="image"></i></div><div><h3>SSLG Updates Accountabilities Portfolio</h3><p>The student council makes digital records open to class representatives.</p></div></article>
+        </div>
+    </section>
+
+    <!-- OPINION SECTION -->
+    <section>
+        <div class="section-header"><h2>Opinion</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="pen-tool"></i></div><div><h3>[Editorial] Striking a Technical Balance</h3><p>Why modern vocational tracks require robust analytical journalism skillsets now more than ever.</p></div></article>
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="user"></i></div><div><h3>[Column] The Digital Note-taking Paradox</h3><p>A deep dive into how changing layout note systems impact raw retention in technical exams.</p></div></article>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section>
+        <div class="section-header"><h2>Features</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="sparkles"></i></div><div><h3>Behind the Blueprint: Trade School Creators</h3><p>Spotlighting the exceptional innovations built entirely by high school workshop majors.</p></div></article>
+        </div>
+    </section>
+
+    <!-- SCI-TECH SECTION -->
+    <section>
+        <div class="section-header"><h2>Science & Technology</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="cpu"></i></div><div><h3>Behavior Packs and Beyond: Game Customization</h3><p>How technical students are utilizing coordinate structures to design independent sandbox entities.</p></div></article>
+        </div>
+    </section>
+
+    <!-- SPORTS SECTION -->
+    <section>
+        <div class="section-header"><h2>Sports</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="trophy"></i></div><div><h3>Varsity Squad Clinches District Title</h3><p>A thrilling fourth-quarter rally secure the gold trophy in an intense finish.</p></div></article>
+        </div>
+    </section>
+
+    <!-- LITERARY SECTION -->
+    <section>
+        <div class="section-header"><h2>Literary</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="compact-list">
+            <article class="compact-card"><div class="img-thumb"><i data-lucide="book-open"></i></div><div><h3>Echoes of the Ink</h3><p>A fresh anthology of contemporary student verse tackling duty, community, and future horizons.</p></div></article>
+        </div>
+    </section>
+
+    <!-- UTILITY NAV BUTTONS -->
+    <section>
+        <div class="utility-grid">
+            <a href="#" class="util-btn"><i data-lucide="users"></i> Editorial Staff</a>
+            <a href="#" class="util-btn"><i data-lucide="info"></i> About Us</a>
+            <a href="#" class="util-btn"><i data-lucide="bell"></i> Press Updates</a>
+            <a href="#" class="util-btn"><i data-lucide="archive"></i> Archives</a>
+        </div>
+    </section>
+</main>
+
+<footer>&copy; 2026 Ang Arkanghel Publication. All rights reserved.</footer>
+
+<script>
+    lucide.createIcons();
+    
+    // Dynamic Carousel with Loop Dots Tracking
+    let current = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicatorContainer = document.getElementById('carousel-indicators');
+    
+    // Generate indicator dots based on slide count dynamically
+    slides.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (index === 0) dot.classList.add('active');
+        indicatorContainer.appendChild(dot);
+    });
+    
+    const dots = document.querySelectorAll('.dot');
+    
+    setInterval(() => {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        
+        current = (current + 1) % slides.length;
+        
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    }, 12000); // Clean 12s display cadence
+
+    // Responsive Theme Controller
+    const toggleBtn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-icon');
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        icon.setAttribute('data-lucide', document.body.classList.contains('dark-mode') ? 'moon' : 'sun');
+        lucide.createIcons();
+    });
+</script>
+
+</body>
+  </html>
