@@ -15,6 +15,7 @@
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
             --icon-color: #1a1a1a;
             --border: rgba(0,0,0,0.08);
+            --nav-overlay: rgba(255, 255, 255, 0.98);
         }
         body.dark-mode { 
             --bg: #0f0f0f; 
@@ -22,13 +23,39 @@
             --card-bg: #161616; 
             --icon-color: #e0e0e0;
             --border: rgba(255,255,255,0.08);
+            --nav-overlay: rgba(22, 22, 22, 0.98);
         }
         
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: background 0.3s, color 0.3s; }
         h1, h2, h3 { font-family: 'Lora', serif; }
 
-        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--border); }
+        /* Header & Navigation Layout */
+        header { padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--border); position: relative; z-index: 100; }
+        .logo-link { display: flex; align-items: center; }
+        .logo-img { height: 45px; width: auto; object-fit: contain; }
         
+        .header-controls { display: flex; gap: 20px; align-items: center; }
+        
+        /* Modern Desktop Menu Styles */
+        .desktop-nav { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .desktop-nav > li { position: relative; }
+        .desktop-nav a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem; padding: 6px 0; transition: color 0.2s; display: flex; align-items: center; gap: 4px; }
+        .desktop-nav a:hover, .active-link { color: var(--accent) !important; font-weight: 600; }
+        
+        /* Desktop Submenus */
+        .submenu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 0.5rem 0; list-style: none; min-width: 160px; border-radius: 6px; z-index: 10; }
+        .submenu a { padding: 8px 16px; font-size: 0.85rem; }
+        .desktop-nav li:hover .submenu { display: block; }
+
+        /* Mobile Slide Out Navigation Drawer */
+        .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--border); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 200; padding: 2rem 1.5rem; box-sizing: border-box; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+        .mobile-nav-panel.open { right: 0; }
+        .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
+        .mobile-nav-links li { margin-bottom: 1rem; }
+        .mobile-nav-links a { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 500; display: block; }
+        .mobile-sub { list-style: none; padding-left: 1.2rem; margin: 0.5rem 0 0 0; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem; }
+        .mobile-sub a { font-size: 0.95rem; opacity: 0.8; }
+
         /* Carousel - Sharp & Taller */
         .carousel-wrapper { width: 100%; max-width: 900px; margin: 2rem auto 1rem auto; }
         .carousel-container { position: relative; width: 100%; height: 380px; overflow: hidden; }
@@ -60,17 +87,75 @@
 
         footer { text-align: center; padding: 3rem; font-size: 0.9rem; opacity: 0.7; border-top: 1px solid var(--border); margin-top: 3rem; }
         button { cursor: pointer; border: none; background: transparent; color: var(--icon-color); }
+        
+        /* Hide layout items dynamically on tiny devices */
+        .desktop-nav-wrapper { display: block; }
+        .mobile-menu-trigger { display: none; }
+
+        @media (max-width: 820px) {
+            .desktop-nav-wrapper { display: none; }
+            .mobile-menu-trigger { display: block; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-size: 1.5rem; font-weight: 700; font-family: 'Lora'; color: var(--accent);">ANG ARKANGHEL</div>
-    <div style="display: flex; gap: 15px;">
+    <a href="#" class="logo-link">
+        <img src="assets/arkanghel.png" alt="" class="logo-img">
+    </a>
+    
+    <!-- Unified Multi-Level Navigation Controller -->
+    <div class="header-controls">
+        <div class="desktop-nav-wrapper">
+            <ul class="desktop-nav">
+                <li>
+                    <a href="#" class="active-link">Categories <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
+                    <ul class="submenu">
+                        <li><a href="#">Balita</a></li>
+                        <li><a href="#">Opinyon</a></li>
+                        <li><a href="#">Lathalain</a></li>
+                        <li><a href="#">Agham</a></li>
+                        <li><a href="#">Isports</a></li>
+                        <li><a href="#">Panitikan</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Updates</a></li>
+                <li><a href="#">Editorial Staff</a></li>
+                <li><a href="#">Archives</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+        
         <button id="theme-toggle"><i data-lucide="sun" id="theme-icon"></i></button>
-        <button id="menu-toggle"><i data-lucide="menu"></i></button>
+        <button id="menu-toggle" class="mobile-menu-trigger"><i data-lucide="menu"></i></button>
     </div>
 </header>
+
+<!-- Mobile Navigation Slider Panel -->
+<div class="mobile-nav-panel" id="mobile-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:'Lora'; font-weight:700; color:var(--accent);"></span>
+        <button id="menu-close"><i data-lucide="x"></i></button>
+    </div>
+    <ul class="mobile-nav-links">
+        <li>
+            <a href="#" class="active-link">Categories</a>
+            <ul class="mobile-sub">
+                <li><a href="#">Balita</a></li>
+                <li><a href="#">Opinyon</a></li>
+                <li><a href="#">Lathalain</a></li>
+                <li><a href="#">Agham</a></li>
+                <li><a href="#">Isports</a></li>
+                <li><a href="#">Panitikan</a></li>
+            </ul>
+        </li>
+        <li><a href="#">Updates</a></li>
+        <li><a href="#">Editorial Staff</a></li>
+        <li><a href="#">Archives</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+</div>
 
 <section class="welcome" style="text-align: center; padding: 3rem 5% 1rem 5%;">
     <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">The Voice of the Trade School</h1>
@@ -86,9 +171,6 @@
         <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #222;">
             <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">15th Foundation Day Celebrations Begin</h2><p>A grand display of trade pathways, cultural events, and foundational pride.</p></div>
         </div>
-        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #444;">
-            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">Student Journalists Bag Divisional Awards</h2><p>Representing excellence in editorial writing and school paper layout design.</p></div>
-        </div>
     </div>
     <div class="carousel-indicators" id="carousel-indicators"></div>
 </div>
@@ -96,7 +178,7 @@
 <main>
     <!-- NEWS SECTION -->
     <section>
-        <div class="section-header"><h2>Latest News</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Maiinit na Balita</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="image"></i></div><div><h3>Library Wing Now Open for Research</h3><p>Equipped with updated reference books and modern computing stations for assignment loads.</p></div></article>
             <article class="compact-card"><div class="img-thumb"><i data-lucide="image"></i></div><div><h3>SSLG Updates Accountabilities Portfolio</h3><p>The student council makes digital records open to class representatives.</p></div></article>
@@ -105,7 +187,7 @@
 
     <!-- OPINION SECTION -->
     <section>
-        <div class="section-header"><h2>Opinion</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Opinyon</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="pen-tool"></i></div><div><h3>[Editorial] Striking a Technical Balance</h3><p>Why modern vocational tracks require robust analytical journalism skillsets now more than ever.</p></div></article>
             <article class="compact-card"><div class="img-thumb"><i data-lucide="user"></i></div><div><h3>[Column] The Digital Note-taking Paradox</h3><p>A deep dive into how changing layout note systems impact raw retention in technical exams.</p></div></article>
@@ -114,7 +196,7 @@
 
     <!-- FEATURES SECTION -->
     <section>
-        <div class="section-header"><h2>Features</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Lathalain</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="sparkles"></i></div><div><h3>Behind the Blueprint: Trade School Creators</h3><p>Spotlighting the exceptional innovations built entirely by high school workshop majors.</p></div></article>
         </div>
@@ -122,7 +204,7 @@
 
     <!-- SCI-TECH SECTION -->
     <section>
-        <div class="section-header"><h2>Science & Technology</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Agham at Teknolohiya</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="cpu"></i></div><div><h3>Behavior Packs and Beyond: Game Customization</h3><p>How technical students are utilizing coordinate structures to design independent sandbox entities.</p></div></article>
         </div>
@@ -130,7 +212,7 @@
 
     <!-- SPORTS SECTION -->
     <section>
-        <div class="section-header"><h2>Sports</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Isports</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="trophy"></i></div><div><h3>Varsity Squad Clinches District Title</h3><p>A thrilling fourth-quarter rally secure the gold trophy in an intense finish.</p></div></article>
         </div>
@@ -138,7 +220,7 @@
 
     <!-- LITERARY SECTION -->
     <section>
-        <div class="section-header"><h2>Literary</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
+        <div class="section-header"><h2>Panitikan</h2><a href="#" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none;">See All</a></div>
         <div class="compact-list">
             <article class="compact-card"><div class="img-thumb"><i data-lucide="book-open"></i></div><div><h3>Echoes of the Ink</h3><p>A fresh anthology of contemporary student verse tackling duty, community, and future horizons.</p></div></article>
         </div>
@@ -160,12 +242,19 @@
 <script>
     lucide.createIcons();
     
-    // Dynamic Carousel with Loop Dots Tracking
+    // Mobile Navigation Drawer Handles
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const mobilePanel = document.getElementById('mobile-panel');
+
+    menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
+    menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+    
+    // Dynamic Carousel Logic
     let current = 0;
     const slides = document.querySelectorAll('.carousel-slide');
     const indicatorContainer = document.getElementById('carousel-indicators');
     
-    // Generate indicator dots based on slide count dynamically
     slides.forEach((_, index) => {
         const dot = document.createElement('div');
         dot.classList.add('dot');
@@ -174,16 +263,13 @@
     });
     
     const dots = document.querySelectorAll('.dot');
-    
     setInterval(() => {
         slides[current].classList.remove('active');
         dots[current].classList.remove('active');
-        
         current = (current + 1) % slides.length;
-        
         slides[current].classList.add('active');
         dots[current].classList.add('active');
-    }, 12000); // Clean 12s display cadence
+    }, 12000);
 
     // Responsive Theme Controller
     const toggleBtn = document.getElementById('theme-toggle');
@@ -194,6 +280,5 @@
         lucide.createIcons();
     });
 </script>
-
 </body>
-  </html>
+</html>
