@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,25 +29,21 @@
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: background 0.3s, color 0.3s; }
         h1, h2, h3 { font-family: 'Lora', serif; }
 
-        /* Header & Navigation Layout */
         header { padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--border); position: relative; z-index: 100; }
         .logo-link { display: flex; align-items: center; }
         .logo-img { height: 45px; width: auto; object-fit: contain; }
         
         .header-controls { display: flex; gap: 20px; align-items: center; }
         
-        /* Modern Desktop Menu Styles */
         .desktop-nav { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; align-items: center; }
         .desktop-nav > li { position: relative; }
         .desktop-nav a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem; padding: 6px 0; transition: color 0.2s; display: flex; align-items: center; gap: 4px; }
         .desktop-nav a:hover, .active-link { color: var(--accent) !important; font-weight: 600; }
         
-        /* Desktop Submenus */
         .submenu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 0.5rem 0; list-style: none; min-width: 160px; border-radius: 6px; z-index: 10; }
         .submenu a { padding: 8px 16px; font-size: 0.85rem; }
         .desktop-nav li:hover .submenu { display: block; }
 
-        /* Mobile Slide Out Navigation Drawer */
         .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--border); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 200; padding: 2rem 1.5rem; box-sizing: border-box; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
         .mobile-nav-panel.open { right: 0; }
         .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
@@ -56,31 +52,27 @@
         .mobile-sub { list-style: none; padding-left: 1.2rem; margin: 0.5rem 0 0 0; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem; }
         .mobile-sub a { font-size: 0.95rem; opacity: 0.8; }
 
-        /* Carousel - Sharp & Taller */
         .carousel-wrapper { width: 100%; max-width: 900px; margin: 2rem auto 1rem auto; }
-        .carousel-container { position: relative; width: 100%; height: 380px; overflow: hidden; }
-        .carousel-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: flex-end; padding: 2.5rem; box-sizing: border-box; color: white; }
+        .carousel-container { position: relative; width: 100%; height: 380px; overflow: hidden; background: #222; }
+        .carousel-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: flex-end; padding: 2.5rem; box-sizing: border-box; color: white; text-decoration: none; }
         .carousel-slide.active { opacity: 1; }
         
-        /* Indicators */
         .carousel-indicators { display: flex; justify-content: center; gap: 8px; margin-top: 0.75rem; }
         .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--accent); transform: scale(1.2); }
         
-        /* Layout Grid */
         main { max-width: 900px; margin: 0 auto; padding: 0 1rem; }
         section { margin-bottom: 2.5rem; }
         .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
         
-        /* Compact Card Feed */
         .compact-list { display: grid; gap: 10px; }
-        .compact-card { display: flex; gap: 15px; background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: var(--shadow); align-items: center; border: 1px solid var(--border); }
+        .compact-card { display: flex; gap: 15px; background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: var(--shadow); align-items: center; border: 1px solid var(--border); text-decoration: none; color: inherit; transition: transform 0.2s ease; }
+        .compact-card:hover { transform: translateY(-2px); }
         .img-thumb { width: 90px; height: 70px; background: #eee; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #aaa; }
         body.dark-mode .img-thumb { background: #222; }
         .compact-card h3 { font-size: 1rem; margin: 0 0 4px 0; line-height: 1.3; }
         .compact-card p { font-size: 0.85rem; margin: 0; opacity: 0.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Navigation Quick Buttons Section */
         .utility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 3rem; }
         .util-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 8px; font-weight: 500; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: 0.2s; }
         .util-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -88,7 +80,6 @@
         footer { text-align: center; padding: 3rem; font-size: 0.9rem; opacity: 0.7; border-top: 1px solid var(--border); margin-top: 3rem; }
         button { cursor: pointer; border: none; background: transparent; color: var(--icon-color); }
         
-        /* Hide layout items dynamically on tiny devices */
         .desktop-nav-wrapper { display: block; }
         .mobile-menu-trigger { display: none; }
 
@@ -102,22 +93,20 @@
 
 <header>
     <a href="#" class="logo-link">
-        <img src="assets/arkanghel.png" alt="" class="logo-img">
+        <img src="assets/arkanghel.png" alt="Ang Arkanghel Logo" class="logo-img">
     </a>
     
-    <!-- Unified Multi-Level Navigation Controller -->
     <div class="header-controls">
         <div class="desktop-nav-wrapper">
             <ul class="desktop-nav">
                 <li>
                     <a href="#" class="active-link">Categories <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
                     <ul class="submenu">
-                        <li><a href="#">Balita</a></li>
-                        <li><a href="#">Opinyon</a></li>
-                        <li><a href="#">Lathalain</a></li>
-                        <li><a href="#">Agham</a></li>
-                        <li><a href="#">Isports</a></li>
-                        <li><a href="#">Panitikan</a></li>
+                        <li><a href="#news">Balita</a></li>
+                        <li><a href="#opinion">Opinyon</a></li>
+                        <li><a href="#feature">Lathalain</a></li>
+                        <li><a href="#scitech">Agham</a></li>
+                        <li><a href="#sports">Isports</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Updates</a></li>
@@ -132,22 +121,20 @@
     </div>
 </header>
 
-<!-- Mobile Navigation Slider Panel -->
 <div class="mobile-nav-panel" id="mobile-panel">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-family:'Lora'; font-weight:700; color:var(--accent);"></span>
+        <span style="font-family:'Lora'; font-weight:700; color:var(--accent);">NAVIGATE</span>
         <button id="menu-close"><i data-lucide="x"></i></button>
     </div>
     <ul class="mobile-nav-links">
         <li>
             <a href="#" class="active-link">Categories</a>
             <ul class="mobile-sub">
-                <li><a href="#">Balita</a></li>
-                <li><a href="#">Opinyon</a></li>
-                <li><a href="#">Lathalain</a></li>
-                <li><a href="#">Agham</a></li>
-                <li><a href="#">Isports</a></li>
-                <li><a href="#">Panitikan</a></li>
+                <li><a href="#news">Balita</a></li>
+                <li><a href="#opinion">Opinyon</a></li>
+                <li><a href="#feature">Lathalain</a></li>
+                <li><a href="#scitech">Agham</a></li>
+                <li><a href="#sports">Isports</a></li>
             </ul>
         </li>
         <li><a href="#">Updates</a></li>
@@ -162,14 +149,214 @@
     <p style="opacity: 0.8; margin: 0;">Official Student Publication Website</p>
 </section>
 
-<!-- Sharp-Cornered Rectangular Taller Carousel -->
+<!-- Dynamic Top Stories Carousel -->
 <div class="carousel-wrapper">
-    <div class="carousel-container">
-        <div class="carousel-slide active" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #dc3545;">
-            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">Project GLASS Initiative Launched</h2><p>Advancing structural transparency and student access within the learner government.</p></div>
+    <div class="carousel-container" id="carousel-slides">
+        <!-- Will be populated by JS -->
+    </div>
+    <div class="carousel-indicators" id="carousel-indicators"></div>
+</div>
+
+<main>
+    <!-- NEWS SECTION -->
+    <section id="news">
+        <div class="section-header"><h2>Latest News (Balita)</h2></div>
+        <div class="compact-list" id="feed-news"></div>
+    </section>
+
+    <!-- OPINION SECTION -->
+    <section id="opinion">
+        <div class="section-header"><h2>Opinion (Opinyon)</h2></div>
+        <div class="compact-list" id="feed-opinion"></div>
+    </section>
+
+    <!-- FEATURE SECTION -->
+    <section id="feature">
+        <div class="section-header"><h2>Feature (Lathalain)</h2></div>
+        <div class="compact-list" id="feed-feature"></div>
+    </section>
+
+    <!-- SCI-TECH SECTION -->
+    <section id="scitech">
+        <div class="section-header"><h2>Science & Technology (Agham)</h2></div>
+        <div class="compact-list" id="feed-scitech"></div>
+    </section>
+
+    <!-- SPORTS SECTION -->
+    <section id="sports">
+        <div class="section-header"><h2>Sports (Isports)</h2></div>
+        <div class="compact-list" id="feed-sports"></div>
+    </section>
+
+    <!-- UTILITY NAV BUTTONS -->
+    <section>
+        <div class="utility-grid">
+            <a href="#" class="util-btn"><i data-lucide="users"></i> Editorial Staff</a>
+            <a href="#" class="util-btn"><i data-lucide="info"></i> About Us</a>
+            <a href="#" class="util-btn"><i data-lucide="bell"></i> Press Updates</a>
+            <a href="#" class="util-btn"><i data-lucide="archive"></i> Archives</a>
         </div>
-        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), #222;">
-            <div><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">15th Foundation Day Celebrations Begin</h2><p>A grand display of trade pathways, cultural events, and foundational pride.</p></div>
+    </section>
+</main>
+
+<footer>&copy; 2026 Ang Arkanghel Publication. All rights reserved.</footer>
+
+<script>
+    // 🔗 Ipalit dito ang iyong Published Google Sheet TSV Link:
+    // File -> Share -> Publish to web -> Tab Separated Values (.tsv)
+    const TSV_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
+
+    lucide.createIcons();
+
+    // Mobile Panel Handlers
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const mobilePanel = document.getElementById('mobile-panel');
+
+    menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
+    menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+
+    // Dark Mode Toggle
+    const toggleBtn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-icon');
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        icon.setAttribute('data-lucide', document.body.classList.contains('dark-mode') ? 'moon' : 'sun');
+        lucide.createIcons();
+    });
+
+    // Main Engine to Fetch and Parse TSV Data
+    async function loadSheetData() {
+        try {
+            const res = await fetch(TSV_SHEET_URL);
+            const text = await res.text();
+            
+            // Break TSV by lines & tabs
+            const lines = text.split('\n').map(row => row.split('\t'));
+            
+            // Clear header row (TYPE, HEADLINE/TITLE, LEAD SENTENCE, LINK)
+            const articles = [];
+            for (let i = 1; i < lines.length; i++) {
+                const [type, headline, lead, link] = lines[i];
+                if (type && headline) {
+                    articles.push({
+                        type: type.trim().toUpperCase(),
+                        headline: headline.trim(),
+                        lead: lead ? lead.trim() : '',
+                        link: link ? link.trim() : '#'
+                    });
+                }
+            }
+
+            renderTopStories(articles);
+            renderCategoryFeeds(articles);
+
+        } catch (err) {
+            console.error("Failed to load Google Sheets TSV Data:", err);
+        }
+    }
+
+    // Pick 3 to 4 Random Headliners
+    function renderTopStories(articles) {
+        if (!articles.length) return;
+        
+        // Shuffle array & take 3 to 4 items
+        const shuffled = [...articles].sort(() => 0.5 - Math.random());
+        const selectedHeadliners = shuffled.slice(0, Math.min(4, articles.length));
+        
+        const container = document.getElementById('carousel-slides');
+        const indicators = document.getElementById('carousel-indicators');
+        container.innerHTML = '';
+        indicators.innerHTML = '';
+
+        selectedHeadliners.forEach((item, index) => {
+            // Build Slide
+            const slide = document.createElement('a');
+            slide.href = item.link;
+            slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+            slide.style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), #dc3545`;
+            slide.innerHTML = `
+                <div>
+                    <span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">${item.type}</span>
+                    <h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">${item.headline}</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">${item.lead}</p>
+                </div>
+            `;
+            container.appendChild(slide);
+
+            // Build Dot
+            const dot = document.createElement('div');
+            dot.className = `dot ${index === 0 ? 'active' : ''}`;
+            indicators.appendChild(dot);
+        });
+
+        startCarousel();
+    }
+
+    // Auto Loop Carousel Functionality
+    let currentSlide = 0;
+    function startCarousel() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        if (slides.length <= 1) return;
+
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
+            
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+        }, 10000);
+    }
+
+    // Render Compact Article Feeds per Section
+    function renderCategoryFeeds(articles) {
+        const map = {
+            'NEWS': 'feed-news',
+            'OPINION': 'feed-opinion',
+            'FEATURE': 'feed-feature',
+            'SCI-TECH': 'feed-scitech',
+            'SPORTS': 'feed-sports'
+        };
+
+        // Reset containers
+        Object.values(map).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '';
+        });
+
+        articles.forEach(item => {
+            const targetId = map[item.type];
+            if (targetId) {
+                const container = document.getElementById(targetId);
+                if (container) {
+                    const card = document.createElement('a');
+                    card.href = item.link;
+                    card.className = 'compact-card';
+                    card.innerHTML = `
+                        <div class="img-thumb"><i data-lucide="newspaper"></i></div>
+                        <div>
+                            <h3>${item.headline}</h3>
+                            <p>${item.lead}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            }
+        });
+        
+        lucide.createIcons();
+    }
+
+    // Initialize fetching when page is ready
+    loadSheetData();
+</script>
+
+</body>
+</html>
+ound: rgba(255,255,255,0.2); padding: 4px 8px; text-transform: uppercase;">Top Story</span><h2 style="font-size: 1.8rem; margin: 10px 0 5px 0;">15th Foundation Day Celebrations Begin</h2><p>A grand display of trade pathways, cultural events, and foundational pride.</p></div>
         </div>
     </div>
     <div class="carousel-indicators" id="carousel-indicators"></div>
