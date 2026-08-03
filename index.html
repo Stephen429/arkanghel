@@ -299,7 +299,7 @@
         menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
     }
 
-    // Date Formatter Engine (Converts 8/1/2026 or 2026-08-01 into "Agosto 1, 2026")
+    // Date Formatter Engine
     function formatFilipinoDate(dateInput) {
         if (!dateInput) return '';
         const d = new Date(dateInput);
@@ -313,6 +313,30 @@
         return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
     }
 
+    // Image Fetcher mula sa article-image-box ng indibidwal na HTML page
+    async function fetchArticleThumbnail(articleUrl) {
+        if (!articleUrl || articleUrl === '#') return '';
+        try {
+            const response = await fetch(articleUrl);
+            const htmlText = await response.text();
+            
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            
+            const imageBox = doc.querySelector('.article-image-box');
+            if (imageBox) {
+                const imgTag = imageBox.querySelector('img');
+                if (imgTag && imgTag.src) {
+                    return imgTag.src;
+                }
+            }
+            return '';
+        } catch (e) {
+            console.error('Hindi nakuha ang larawan mula sa:', articleUrl, e);
+            return '';
+        }
+    }
+
     // TSV Fetching & Parsing (TYPE | DATE | HEADLINE | LEAD | LINK | AUTHOR)
     async function loadSheetData() {
         try {
@@ -320,27 +344,39 @@
             const text = await res.text();
             
             const lines = text.split('\n').map(row => row.split('\t'));
-            const articles = [];
+            let rawArticles = [];
 
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].length >= 3) {
                     const [type, dateStr, headline, lead, link, author] = lines[i];
                     if (type && headline) {
-                        articles.push({
+                        rawArticles.push({
                             type: type.trim().toUpperCase(),
                             dateFormatted: formatFilipinoDate(dateStr ? dateStr.trim() : ''),
                             dateObj: dateStr ? new Date(dateStr.trim()) : new Date(0),
                             headline: headline.trim(),
                             lead: lead ? lead.trim() : '',
                             link: link ? link.trim() : '#',
-                            author: author ? author.trim() : 'Patnugutan'
+                            author: author ? author.trim() : 'Patnugutan',
+                            image: ''
                         });
                     }
                 }
             }
 
             // Sort by Date Recent
-            articles.sort((a, b) => b.dateObj - a.dateObj);
+            rawArticles.sort((a, b) => b.dateObj - a.dateObj);
+
+            // Sabay-sabay na kukunin ang mga larawan para sa mga artikulong ipapakita sa homepage
+            const articles = await Promise.all(rawArticles.map(async (art) => {
+                if (art.link && art.link !== '#') {
+                    const fetchedImg = await fetchArticleThumbnail(art.link);
+                    if (fetchedImg) {
+                        art.image = fetchedImg;
+                    }
+                }
+                return art;
+            }));
 
             renderTopStories(articles);
             renderCategoryFeeds(articles);
@@ -366,7 +402,13 @@
             const slide = document.createElement('a');
             slide.href = item.link;
             slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
-            slide.style.background = `linear-gradient(180deg, rgba(8,3,4,0.1) 0%, rgba(8,3,4,0.95) 100%), #4a000b`;
+            
+            // Kung may nahanap na image, gamitin bilang background ng carousel slide o lagyan ng overlay
+            const bgStyle = item.image 
+                ? `linear-gradient(180deg, rgba(8,3,4,0.2) 0%, rgba(8,3,4,0.9) 100%), url('${item.image}') center/cover no-repeat` 
+                : `linear-gradient(180deg, rgba(8,3,4,0.1) 0%, rgba(8,3,4,0.95) 100%), #4a000b`;
+            
+            slide.style.background = bgStyle;
             
             slide.innerHTML = `
                 <div class="carousel-content">
@@ -407,7 +449,7 @@
         }, 7000);
     }
 
-    // Dynamic Category Feeds Renderer with Limit (e.g., max 4 articles per category)
+    // Dynamic Category Feeds Renderer with Image Fetch Support & Limit (Max 4)
     function renderCategoryFeeds(articles) {
         const map = {
             'NEWS': 'feed-news',
@@ -428,11 +470,10 @@
             categorized[item.type].push(item);
         });
 
-        const MAX_ARTICLES_PER_CATEGORY = 4; // Itakda ang limit dito (halimbawa: 4 o 5)
+        const MAX_ARTICLES_PER_CATEGORY = 4;
 
         Object.keys(map).forEach(type => {
             let items = categorized[type] || [];
-            // Limitahan ang bilang ng mga artikulo bago i-render
             items = items.slice(0, MAX_ARTICLES_PER_CATEGORY);
 
             const container = document.getElementById(map[type]);
@@ -444,9 +485,14 @@
                         const card = document.createElement('a');
                         card.href = item.link;
                         card.className = 'featured-card';
+                        
+                        const imgHTML = item.image 
+                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                            : `<i data-lucide="image" style="width:36px;height:36px; color:var(--text-muted);"></i>`;
+
                         card.innerHTML = `
                             <div class="featured-img-container">
-                                <i data-lucide="image" style="width:36px;height:36px;"></i>
+                                ${imgHTML}
                             </div>
                             <div>
                                 <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
@@ -464,9 +510,14 @@
                         const card = document.createElement('a');
                         card.href = item.link;
                         card.className = 'compact-card';
+
+                        const imgHTML = item.image 
+                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                            : `<i data-lucide="file-text" style="width:24px;height:24px; color:var(--text-muted);"></i>`;
+
                         card.innerHTML = `
                             <div class="compact-img-container">
-                                <i data-lucide="file-text" style="width:24px;height:24px;"></i>
+                                ${imgHTML}
                             </div>
                             <div>
                                 <h3>${item.headline}</h3>
