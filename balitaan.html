@@ -177,6 +177,7 @@
 <script>
     lucide.createIcons();
 
+    // Light/Dark Mode Handler
     function initTheme() {
         const savedTheme = localStorage.getItem('theme_preference');
         const hour = new Date().getHours();
@@ -211,6 +212,7 @@
 
     initTheme();
 
+    // Mobile Panel Handlers
     const menuToggle = document.getElementById('menu-toggle');
     const menuClose = document.getElementById('menu-close');
     const mobilePanel = document.getElementById('mobile-panel');
@@ -222,14 +224,16 @@
         menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
     }
 
-    // TSV Data Fetching and Image Rendering Logic
+    // Google Sheets TSV Link mula sa Homepage
+    const TSV_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
+
     let allNewsArticles = [];
     let currentPage = 1;
     const articlesPerPage = 10;
 
     async function loadNewsFromTSV() {
         try {
-            const response = await fetch('data.tsv'); 
+            const response = await fetch(TSV_SHEET_URL); 
             const tsvText = await response.text();
             
             const rows = tsvText.split('\n').map(row => row.split('\t'));
@@ -250,6 +254,7 @@
                 if (cols.length >= headers.length) {
                     const category = cols[catIdx] ? cols[catIdx].trim().toUpperCase() : '';
                     
+                    // I-filter para ipakita lamang ang NEWS o BALITAAN
                     if (category === 'NEWS' || category === 'BALITAAN') {
                         allNewsArticles.push({
                             id: cols[idIdx] ? cols[idIdx].trim() : i,
@@ -265,11 +270,11 @@
 
             renderPage(1);
         } catch (error) {
-            console.error('Error sa pag-load ng TSV:', error);
+            console.error('Error sa pag-load ng TSV mula sa Google Sheets:', error);
             document.getElementById('articles-list').innerHTML = `
                 <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
                     <strong>Paumanhin, hindi ma-load ang mga balita sa kasalukuyan.</strong><br>
-                    <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang koneksyon o ang TSV file path.</span>
+                    <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang koneksyon o ang TSV URL ng Google Sheets.</span>
                 </div>`;
         }
     }
@@ -291,7 +296,6 @@
 
         let htmlContent = '';
         paginatedArticles.forEach(art => {
-
             const hasImage = art.image && art.image !== '' && art.image !== 'NULL';
             
             htmlContent += `
@@ -315,6 +319,7 @@
 
         listContainer.innerHTML = htmlContent;
 
+        // RULE: Kung umabot sa 10 o higit pa ang artikulo, magpakita ng mga pages button sa ibaba
         if (allNewsArticles.length > 10) {
             const totalPages = Math.ceil(allNewsArticles.length / articlesPerPage);
             let paginationHTML = '';
