@@ -211,7 +211,6 @@
 
     initTheme();
 
-    // Mobile Panel Handlers na may null safety check
     const menuToggle = document.getElementById('menu-toggle');
     const menuClose = document.getElementById('menu-close');
     const mobilePanel = document.getElementById('mobile-panel');
@@ -223,7 +222,7 @@
         menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
     }
 
-    // TSV Data Fetching and Pagination Logic
+    // TSV Data Fetching and Image Rendering Logic
     let allNewsArticles = [];
     let currentPage = 1;
     const articlesPerPage = 10;
@@ -292,6 +291,9 @@
 
         let htmlContent = '';
         paginatedArticles.forEach(art => {
+
+            const hasImage = art.image && art.image !== '' && art.image !== 'NULL';
+            
             htmlContent += `
                 <a href="article.html?id=${art.id}" class="compact-card">
                     <div class="compact-info">
@@ -303,14 +305,16 @@
                         <h2 class="compact-headline">${art.title}</h2>
                         <p class="compact-excerpt">${art.excerpt}</p>
                     </div>
-                    ${art.image ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` : `<div class="compact-thumb" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.7rem;">Walang Larawan</div>`}
+                    ${hasImage 
+                        ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
+                        : `<div class="compact-thumb" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.7rem; background:var(--bg);">Walang Larawan</div>`
+                    }
                 </a>
             `;
         });
 
         listContainer.innerHTML = htmlContent;
 
-        // RULE: Kung umabot sa 10 o higit pa, magpakita ng mga pages button sa ibaba
         if (allNewsArticles.length > 10) {
             const totalPages = Math.ceil(allNewsArticles.length / articlesPerPage);
             let paginationHTML = '';
