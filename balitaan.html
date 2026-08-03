@@ -232,6 +232,20 @@
     let currentPage = 1;
     const articlesPerPage = 10;
 
+    // Date Formatter Engine (Converts 8/1/2026 or 2026-08-01 into "Agosto 1, 2026")
+    function formatFilipinoDate(dateInput) {
+        if (!dateInput) return '';
+        const d = new Date(dateInput);
+        if (isNaN(d.getTime())) return dateInput;
+
+        const months = [
+            "Enero", "Pebredo", "Marso", "Abril", "Mayo", "Hunyo", 
+            "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
+        ];
+        
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+
     async function fetchArticleThumbnail(articleUrl) {
         if (!articleUrl || articleUrl === '#') return '';
         try {
@@ -278,9 +292,10 @@
                     const typeValue = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
                     
                     if (typeValue === 'NEWS' || typeValue === 'BALITAAN') {
+                        const rawDate = cols[dateIdx] ? cols[dateIdx].trim() : '';
                         rawArticles.push({
                             type: typeValue,
-                            date: cols[dateIdx] ? cols[dateIdx].trim() : '',
+                            date: formatFilipinoDate(rawDate),
                             title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
                             lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng balitang ito.',
                             link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
@@ -313,19 +328,7 @@
                 </div>`;
         }
     }
-    
-    function formatFilipinoDate(dateInput) {
-        if (!dateInput) return '';
-        const d = new Date(dateInput);
-        if (isNaN(d.getTime())) return dateInput;
 
-        const months = [
-            "Enero", "Pebredo", "Marso", "Abril", "Mayo", "Hunyo", 
-            "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
-        ];
-        
-        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-}
     function renderPage(page) {
         currentPage = page;
         const listContainer = document.getElementById('articles-list');
@@ -349,14 +352,13 @@
             
             const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
 
-            // Tinanggal ang target="_blank" para sa parehong tab bubukas ang artikulo
             htmlContent += `
                 <a href="${art.link}" class="compact-card" style="${cardStyle}">
                     <div class="compact-info">
                         <div class="compact-meta">
                             <span>${art.date}</span>
                             <span>•</span>
-                            <span>Isinulat Ni ${art.author}</span>
+                            <span>Mula kay ${art.author}</span>
                         </div>
                         <h2 class="compact-headline">${art.title}</h2>
                         <p class="compact-excerpt">${art.lead}</p>
