@@ -276,11 +276,14 @@
         }
     }
 
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme_preference', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        updateThemeIcon();
-    });
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme_preference', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            updateThemeIcon();
+        });
+    }
 
     initTheme();
 
@@ -289,8 +292,12 @@
     const menuClose = document.getElementById('menu-close');
     const mobilePanel = document.getElementById('mobile-panel');
 
-    menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
-    menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+    if (menuToggle && mobilePanel) {
+        menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
+    }
+    if (menuClose && mobilePanel) {
+        menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+    }
 
     // Date Formatter Engine (Converts 8/1/2026 or 2026-08-01 into "Agosto 1, 2026")
     function formatFilipinoDate(dateInput) {
@@ -350,6 +357,8 @@
         const selectedHeadliners = articles.slice(0, Math.min(4, articles.length));
         const container = document.getElementById('carousel-slides');
         const indicators = document.getElementById('carousel-indicators');
+        if (!container || !indicators) return;
+
         container.innerHTML = '';
         indicators.innerHTML = '';
 
@@ -398,7 +407,7 @@
         }, 7000);
     }
 
-    // Dynamic Category Feeds Renderer
+    // Dynamic Category Feeds Renderer with Limit (e.g., max 4 articles per category)
     function renderCategoryFeeds(articles) {
         const map = {
             'NEWS': 'feed-news',
@@ -419,8 +428,13 @@
             categorized[item.type].push(item);
         });
 
+        const MAX_ARTICLES_PER_CATEGORY = 4; // Itakda ang limit dito (halimbawa: 4 o 5)
+
         Object.keys(map).forEach(type => {
-            const items = categorized[type] || [];
+            let items = categorized[type] || [];
+            // Limitahan ang bilang ng mga artikulo bago i-render
+            items = items.slice(0, MAX_ARTICLES_PER_CATEGORY);
+
             const container = document.getElementById(map[type]);
             
             if (container && items.length > 0) {
@@ -471,6 +485,5 @@
 
     loadSheetData();
 </script>
-
 </body>
 </html>
