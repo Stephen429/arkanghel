@@ -305,7 +305,7 @@
             renderPage(1);
 
         } catch (error) {
-            console.error('Error sa pag-load ng TSV mula sa Google Sheets:', error);
+            console.error('Error sa pag-load:', error);
             document.getElementById('articles-list').innerHTML = `
                 <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
                     <strong>Paumanhin, hindi ma-load ang mga balita sa kasalukuyan.</strong><br>
@@ -313,7 +313,19 @@
                 </div>`;
         }
     }
+    
+    function formatFilipinoDate(dateInput) {
+        if (!dateInput) return '';
+        const d = new Date(dateInput);
+        if (isNaN(d.getTime())) return dateInput;
 
+        const months = [
+            "Enero", "Pebredo", "Marso", "Abril", "Mayo", "Hunyo", 
+            "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
+        ];
+        
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
     function renderPage(page) {
         currentPage = page;
         const listContainer = document.getElementById('articles-list');
@@ -344,7 +356,7 @@
                         <div class="compact-meta">
                             <span>${art.date}</span>
                             <span>•</span>
-                            <span>Ni ${art.author}</span>
+                            <span>Isinulat Ni ${art.author}</span>
                         </div>
                         <h2 class="compact-headline">${art.title}</h2>
                         <p class="compact-excerpt">${art.lead}</p>
