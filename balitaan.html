@@ -329,7 +329,7 @@
         }
     }
 
-    function renderPage(page) {
+        function renderPage(page) {
         currentPage = page;
         const listContainer = document.getElementById('articles-list');
         const paginationContainer = document.getElementById('pagination-controls');
@@ -346,8 +346,14 @@
 
         let htmlContent = '';
         paginatedArticles.forEach(art => {
+            const imageHTML = art.image 
+                ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
+                : '';
+            
+            const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
+
             htmlContent += `
-                <a href="${art.link}" class="compact-card" target="_blank" rel="noopener noreferrer">
+                <a href="${art.link}" class="compact-card" style="${cardStyle}" target="_blank" rel="noopener noreferrer">
                     <div class="compact-info">
                         <div class="compact-meta">
                             <span>${art.date}</span>
@@ -357,10 +363,7 @@
                         <h2 class="compact-headline">${art.title}</h2>
                         <p class="compact-excerpt">${art.lead}</p>
                     </div>
-                    ${art.image 
-                        ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
-                        : `<div class="compact-thumb" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.65rem; background:var(--bg); text-align:center; padding:4px;">Naglo-load ng Larawan...</div>`
-                    }
+                    ${imageHTML}
                 </a>
             `;
         });
