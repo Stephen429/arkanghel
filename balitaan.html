@@ -113,7 +113,7 @@
 
 <header>
     <a href="index.html" class="logo-container">
-        <img src="assets/arkanghel.png" alt="Ang Arkanghel Logo" class="logo-img">
+        <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
     </a>
     
     <div class="header-controls">
@@ -232,38 +232,38 @@
     let currentPage = 1;
     const articlesPerPage = 10;
 
-    async function loadNewsFromTSV() {
+        async function loadNewsFromTSV() {
         try {
             const response = await fetch(TSV_SHEET_URL); 
             const tsvText = await response.text();
             
             const rows = tsvText.split('\n').map(row => row.split('\t'));
-            const headers = rows[0].map(h => h.trim().toLowerCase());
+            const headers = rows[0].map(h => h.trim().toUpperCase()); // Ginawang uppercase para mas madaling mahanap
             
-            const idIdx = headers.indexOf('id');
-            const catIdx = headers.indexOf('category');
-            const titleIdx = headers.indexOf('title');
-            const authorIdx = headers.indexOf('author');
-            const dateIdx = headers.indexOf('date');
-            const imageIdx = headers.indexOf('image');
-            const excerptIdx = headers.indexOf('excerpt');
+            // Pagtutugma sa eksaktong headers mo (A1 hanggang F1)
+            const typeIdx = headers.indexOf('TYPE');
+            const dateIdx = headers.indexOf('DATE');
+            const titleIdx = headers.indexOf('HEADLINE/TITLE');
+            const leadIdx = headers.indexOf('LEAD SENTENCE');
+            const linkIdx = headers.indexOf('LINK');
+            const authorIdx = headers.indexOf('AUTHOR');
 
             allNewsArticles = [];
 
             for (let i = 1; i < rows.length; i++) {
                 const cols = rows[i];
                 if (cols.length >= headers.length) {
-                    const category = cols[catIdx] ? cols[catIdx].trim().toUpperCase() : '';
+                    const typeValue = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
                     
-                    // I-filter para ipakita lamang ang NEWS o BALITAAN
-                    if (category === 'NEWS' || category === 'BALITAAN') {
+                    // I-filter kung ang TYPE ay BALITAAN o NEWS
+                    if (typeValue === 'NEWS' || typeValue === 'BALITAAN') {
                         allNewsArticles.push({
-                            id: cols[idIdx] ? cols[idIdx].trim() : i,
-                            title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
-                            author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan',
+                            type: typeValue,
                             date: cols[dateIdx] ? cols[dateIdx].trim() : '',
-                            image: cols[imageIdx] ? cols[imageIdx].trim() : '',
-                            excerpt: cols[excerptIdx] ? cols[excerptIdx].trim() : 'Mag-click upang basahin ang buong detalye ng balitang ito.'
+                            title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
+                            lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng balitang ito.',
+                            link: cols[linkIdx] ? cols[linkIdx].trim() : '#', // Direktang link mula sa E column mo
+                            author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan'
                         });
                     }
                 }
@@ -297,30 +297,24 @@
 
         let htmlContent = '';
         paginatedArticles.forEach(art => {
-            const hasImage = art.image && art.image !== '' && art.image !== 'NULL';
-            
             htmlContent += `
-                <a href="article.html?id=${art.id}" class="compact-card">
-                    <div class="compact-info">
+                <a href="${art.link}" class="compact-card" target="_blank" rel="noopener noreferrer">
+                    <div class="compact-info" style="grid-column: 1 / -1;">
                         <div class="compact-meta">
                             <span>${art.date}</span>
                             <span>•</span>
                             <span>Ni ${art.author}</span>
                         </div>
                         <h2 class="compact-headline">${art.title}</h2>
-                        <p class="compact-excerpt">${art.excerpt}</p>
+                        <p class="compact-excerpt">${art.lead}</p>
                     </div>
-                    ${hasImage 
-                        ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
-                        : `<div class="compact-thumb" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.7rem; background:var(--bg);">Walang Larawan</div>`
-                    }
                 </a>
             `;
         });
 
         listContainer.innerHTML = htmlContent;
 
-        // RULE: Kung umabot sa 10 o higit pa ang artikulo, magpakita ng mga pages button sa ibaba
+        // Pagination Rule (Kung hihigit sa 10 ang artikulo)
         if (allNewsArticles.length > 10) {
             const totalPages = Math.ceil(allNewsArticles.length / articlesPerPage);
             let paginationHTML = '';
