@@ -44,9 +44,10 @@
         body { background: var(--bg); color: var(--text); font-family: var(--font-ui); margin: 0; display: flex; flex-direction: column; min-height: 100vh; line-height: 1.6; }
         
         /* Header Navigation Styles */
-        header { padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-        .logo-img { height: 34px; width: auto; object-fit: contain; }
-
+        header { padding: 0.75rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 2px solid var(--maroon-main); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+        .logo-container { display: flex; align-items: center; text-decoration: none; }
+        .logo-img { height: 34px; width: auto; object-fit: contain; } /* Adjusted size for Wordmark */
+        
         .header-controls { display: flex; gap: 20px; align-items: center; }
         .desktop-nav-wrapper { position: relative; }
         .desktop-nav { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; align-items: center; }
