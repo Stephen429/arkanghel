@@ -232,15 +232,39 @@
     let currentPage = 1;
     const articlesPerPage = 10;
 
-        async function loadNewsFromTSV() {
+           async function fetchArticleThumbnail(articleUrl) {
+        if (!articleUrl || articleUrl === '#') return '';
+        try {
+            const response = await fetch(articleUrl);
+            const htmlText = await response.text();
+            
+            // I-parse ang HTML ng artikulo para hanapin ang article-image-box
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            
+            // Hanapin ang container o ang mismong larawan sa loob nito
+            const imageBox = doc.querySelector('.article-image-box');
+            if (imageBox) {
+                const imgTag = imageBox.querySelector('img');
+                if (imgTag && imgTag.src) {
+                    return imgTag.src;
+                }
+            }
+            return '';
+        } catch (e) {
+            console.error('Hindi nakuha ang larawan mula sa:', articleUrl, e);
+            return '';
+        }
+    }
+
+    async function loadNewsFromTSV() {
         try {
             const response = await fetch(TSV_SHEET_URL); 
             const tsvText = await response.text();
             
             const rows = tsvText.split('\n').map(row => row.split('\t'));
-            const headers = rows[0].map(h => h.trim().toUpperCase()); // Ginawang uppercase para mas madaling mahanap
+            const headers = rows[0].map(h => h.trim().toUpperCase());
             
-            // Pagtutugma sa eksaktong headers mo (A1 hanggang F1)
             const typeIdx = headers.indexOf('TYPE');
             const dateIdx = headers.indexOf('DATE');
             const titleIdx = headers.indexOf('HEADLINE/TITLE');
@@ -255,28 +279,53 @@
                 if (cols.length >= headers.length) {
                     const typeValue = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
                     
-                    // I-filter kung ang TYPE ay BALITAAN o NEWS
                     if (typeValue === 'NEWS' || typeValue === 'BALITAAN') {
+                        const linkVal = cols[linkIdx] ? cols[linkIdx].trim() : '#';
                         allNewsArticles.push({
                             type: typeValue,
                             date: cols[dateIdx] ? cols[dateIdx].trim() : '',
                             title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
                             lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng balitang ito.',
-                            link: cols[linkIdx] ? cols[linkIdx].trim() : '#', // Direktang link mula sa E column mo
-                            author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan'
+                            link: linkVal,
+                            author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan',
+                            image: '' // Pansamantalang blangko habang kino-fetch
                         });
                     }
                 }
             }
 
             renderPage(1);
+
+            // Awtomatikong i-fetch ang mga larawan mula sa kani-kanilang article links sa background
+            for (let index = 0; index < allNewsArticles.length; index++) {
+                const art = allNewsArticles[index];
+                if (art.link && art.link !== '#') {
+                    const fetchedImg = await fetchArticleThumbnail(art.link);
+                    if (fetchedImg) {
+                        allNewsArticles[index].image = fetchedImg;
+                        // I-update ang UI kung kasalukuyang nasa pahinang iyon ang user
+                        updateArticleThumbnailInDOM(art.link, fetchedImg);
+                    }
+                }
+            }
+
         } catch (error) {
-            console.error('Error sa pag-load ng TSV mula sa Google Sheets:', error);
+            console.error('Error sa pag-load:', error);
             document.getElementById('articles-list').innerHTML = `
                 <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
                     <strong>Paumanhin, hindi ma-load ang mga balita sa kasalukuyan.</strong><br>
                     <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang koneksyon o ang TSV URL ng Google Sheets.</span>
                 </div>`;
+        }
+    }
+
+    function updateArticleThumbnailInDOM(link, imgSrc) {
+        const card = document.querySelector(`a.compact-card[href="${link}"]`);
+        if (card) {
+            let thumbContainer = card.querySelector('.compact-thumb');
+            if (thumbContainer) {
+                thumbContainer.outerHTML = `<img src="${imgSrc}" alt="Thumbnail" class="compact-thumb">`;
+            }
         }
     }
 
@@ -299,7 +348,7 @@
         paginatedArticles.forEach(art => {
             htmlContent += `
                 <a href="${art.link}" class="compact-card" target="_blank" rel="noopener noreferrer">
-                    <div class="compact-info" style="grid-column: 1 / -1;">
+                    <div class="compact-info">
                         <div class="compact-meta">
                             <span>${art.date}</span>
                             <span>•</span>
@@ -308,6 +357,10 @@
                         <h2 class="compact-headline">${art.title}</h2>
                         <p class="compact-excerpt">${art.lead}</p>
                     </div>
+                    ${art.image 
+                        ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
+                        : `<div class="compact-thumb" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.65rem; background:var(--bg); text-align:center; padding:4px;">Naglo-load ng Larawan...</div>`
+                    }
                 </a>
             `;
         });
