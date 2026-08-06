@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ulat ng Manunulat | Ang Arkanghel</title>
+    <title>Profile ng May-Akda | Ang Arkanghel</title>
     <!-- Opisyal na Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -74,7 +74,7 @@
         /* Main Content Layout */
         main { max-width: 850px; margin: 2.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
 
-        /* Clean Page Header (Katulad ng Balitaan / Tungkol) */
+        /* Clean Page Header */
         .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--card-border); }
         .page-kicker { font-family: var(--font-google-sans); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.3rem; display: block; }
         .page-header h1 { font-family: var(--font-headline); font-size: 2rem; margin: 0 0 0.3rem 0; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
@@ -170,7 +170,7 @@
         &copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.
     </footer>
 
-    <!-- JavaScript para sa pag-fetch ng TSV at conditional rendering -->
+    <!-- JavaScript para sa pag-fetch ng TSV, pagkuha ng category sa Index 0, at full date formatter -->
     <script>
         lucide.createIcons();
 
@@ -178,6 +178,22 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const authorNameParam = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')).trim() : '';
+
+        // Function para gawing full date ang petsa (katulad ng sa homepage)
+        function formatFullDate(dateString) {
+            if (!dateString) return '';
+            const cleanDateStr = dateString.trim();
+            const timestamp = Date.parse(cleanDateStr);
+            if (!isNaN(timestamp)) {
+                const dateObj = new Date(timestamp);
+                return dateObj.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            return cleanDateStr;
+        }
 
         async function initAuthorPage() {
             const mainArea = document.getElementById('main-content-area');
@@ -196,7 +212,6 @@
                 <div class="page-header">
                     <span class="page-kicker">May-Akda / Manunulat</span>
                     <h1 id="author-name-heading">${escapeHtml(authorNameParam)}</h1>
-                    <p>Mga ulat at akdang inilathala sa Ang Arkanghel</p>
                 </div>
 
                 <h2 class="section-title">Mga Inilathalang Akda</h2>
@@ -218,7 +233,6 @@
 
                 const headers = rows[0].map(h => h.trim().toLowerCase());
                 const titleIdx = headers.findIndex(h => h.includes('title') || h.includes('pamagat'));
-                const categoryIdx = headers.findIndex(h => h.includes('category') || h.includes('kategorya'));
                 const authorIdx = headers.findIndex(h => h.includes('author') || h.includes('may-akda') || h.includes('manunulat'));
                 const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('petsa'));
                 const slugIdx = headers.findIndex(h => h.includes('slug') || h.includes('link') || h.includes('id'));
@@ -230,10 +244,13 @@
                     if (authorIdx !== -1 && cols[authorIdx]) {
                         const rowAuthor = cols[authorIdx].trim();
                         if (rowAuthor.toLowerCase() === authorNameParam.toLowerCase()) {
+                            // Category ay direktang kinukuha sa Column 1 (index 0)
+                            const rawCategory = (cols[0] !== undefined && cols[0] !== null) ? cols[0].trim() : 'Pangkalahatan';
+
                             authorArticles.push({
-                                title: titleIdx !== -1 ? cols[titleIdx].trim() : 'Walang Pamagat',
-                                category: categoryIdx !== -1 && cols[categoryIdx] ? cols[categoryIdx].trim() : 'Pangkalahatan',
-                                date: dateIdx !== -1 && cols[dateIdx] ? cols[dateIdx].trim() : '',
+                                title: titleIdx !== -1 && cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
+                                category: rawCategory !== '' ? rawCategory : 'Pangkalahatan',
+                                date: dateIdx !== -1 && cols[dateIdx] ? formatFullDate(cols[dateIdx].trim()) : '',
                                 slug: slugIdx !== -1 && cols[slugIdx] ? cols[slugIdx].trim() : '#'
                             });
                         }
