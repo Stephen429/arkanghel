@@ -124,7 +124,7 @@ function setupGlobalNavigation() {
 }
 
 /* --------------------------------------------------------------------------
-   4. Universal Category Page Controller (Balitaan, Opinyon, Lathalain, Ag-Tek, Isports)
+   4. Universal Category Page Controller
    -------------------------------------------------------------------------- */
 let categoryState = {
     articles: [],
@@ -137,7 +137,6 @@ async function initCategoryPage() {
     const listContainer = document.getElementById('articles-list');
     if (!listContainer) return;
 
-    // Determine target category dynamically from HTML header or filename
     const titleElement = document.querySelector('.category-title') || document.querySelector('.page-header h1');
     const detectedTitle = titleElement ? titleElement.textContent.trim().toUpperCase() : '';
     
@@ -145,13 +144,13 @@ async function initCategoryPage() {
 
     try {
         const response = await fetch(CONFIG.ARTICLES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
+        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
 
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
 
         if (rows.length <= 1) {
-            listContainer.innerHTML = `<div style="text-align:center; padding: 3rem; color:var(--text-muted);">Walang nakitang artikulo sa kategoryang ito.</div>`;
+            listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div><div class="state-description">Walang nakitang artikulo sa kategoryang ito.</div></div>`;
             return;
         }
 
@@ -185,7 +184,6 @@ async function initCategoryPage() {
             }
         }
 
-        // Parallel thumbnail fetching
         categoryState.articles = await Promise.all(rawArticles.map(async (art) => {
             if (art.link && art.link !== '#') {
                 const fetchedImg = await fetchArticleThumbnail(art.link);
@@ -199,29 +197,29 @@ async function initCategoryPage() {
     } catch (error) {
         console.error('Error sa pag-load ng kategorya:', error);
         listContainer.innerHTML = `
-            <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
-                <strong>Paumanhin, hindi ma-load ang mga artikulo sa kasalukuyan.</strong><br>
-                <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang iyong koneksyon.</span>
+            <div class="state-container">
+                <div class="state-title">Paumanhin</div>
+                <div class="state-description">Hindi ma-load ang mga artikulo sa kasalukuyan. Suriin ang koneksyon o ang TSV URL ng Google Sheets.</div>
             </div>`;
     }
 }
 
 function isCategoryMatch(tsvCategory, pageCategory) {
-    if (!tsvCategory || !pageCategory) return true; // Default fallback
+    if (!tsvCategory || !pageCategory) return true;
 
     const target = pageCategory.toUpperCase();
     
     if (target.includes('BALITA')) {
         return tsvCategory === 'NEWS' || tsvCategory === 'BALITAAN' || tsvCategory === 'BALITA';
     }
-    if (target.includes('OPINYON') || target.includes('OPINION')) {
+    if (target.includes('OPINYO') || target.includes('OPINION')) {
         return tsvCategory === 'OPINION' || tsvCategory === 'OPINYON';
     }
     if (target.includes('LATHALAIN') || target.includes('FEATURE')) {
         return tsvCategory === 'FEATURE' || tsvCategory === 'LATHALAIN';
     }
-    if (target.includes('AGHAM') || target.includes('AG-TEK') || target.includes('SCI-TECH')) {
-        return tsvCategory === 'AGHAM' || tsvCategory === 'AG-TEK' || tsvCategory === 'SCI-TECH';
+    if (target.includes('AGHAM') || target.includes('AG-TEK') || target.includes('SCITECH')) {
+        return tsvCategory === 'AGHAM' || tsvCategory === 'AG-TEK' || tsvCategory === 'SCITECH';
     }
     if (target.includes('ISPORTS') || target.includes('SPORTS')) {
         return tsvCategory === 'SPORTS' || tsvCategory === 'ISPORTS';
@@ -238,7 +236,7 @@ function renderCategoryPage(page) {
     if (!listContainer) return;
 
     if (categoryState.articles.length === 0) {
-        listContainer.innerHTML = `<div style="text-align:center; padding: 3rem; color:var(--text-muted);">Walang nakitang artikulo sa kategoryang ito.</div>`;
+        listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div><div class="state-description">Walang nakitang artikulo sa kategoryang ito.</div></div>`;
         if (paginationContainer) paginationContainer.innerHTML = '';
         return;
     }
@@ -273,7 +271,6 @@ function renderCategoryPage(page) {
 
     listContainer.innerHTML = htmlContent;
 
-    // Dynamic Pagination Handling
     if (paginationContainer) {
         if (categoryState.articles.length > categoryState.perPage) {
             const totalPages = Math.ceil(categoryState.articles.length / categoryState.perPage);
@@ -293,7 +290,7 @@ function renderCategoryPage(page) {
 }
 
 /* --------------------------------------------------------------------------
-   5. Page Controller: Author Profile (author.html)
+   5. Page Controller: Author Profile
    -------------------------------------------------------------------------- */
 async function initAuthorPage() {
     const mainArea = document.getElementById('main-content-area');
@@ -306,7 +303,7 @@ async function initAuthorPage() {
         mainArea.innerHTML = `
             <div class="state-container">
                 <div class="state-title">Walang Tinukoy na May-Akda</div>
-                <div class="state-description">Ang pahinang ito ay nangangailangan ng wastong pangalan upang maipakita ang mga akda.</div>
+                <div class="state-description">Ang pahinang ito ay nangangailangan ng structures na pangalan sa link.</div>
             </div>
         `;
         return;
@@ -321,19 +318,19 @@ async function initAuthorPage() {
         <div class="compact-list" id="author-articles-container">
             <div class="state-container" style="margin-top: 0;">
                 <div class="state-title">Kinukuha ang mga ulat...</div>
-                <div class="state-description">Mangyaring maghintay habang hinahanap namin ang mga naisulat na akda.</div>
+                <div class="state-description">Mangyaring maghintay habang hinahanap ang mga akda.</div>
             </div>
         </div>
     `;
 
     try {
         const response = await fetch(CONFIG.ARTICLES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
+        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
 
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
 
-        if (rows.length === 0) throw new Error('Walang laman ang data.');
+        if (rows.length === 0) throw new Error('Walang laman ang TSV data.');
 
         const headers = rows[0].map(h => h.trim().toUpperCase());
         const dateIdx = headers.indexOf('DATE');
@@ -396,7 +393,7 @@ async function initAuthorPage() {
             container.innerHTML = `
                 <div class="state-container" style="margin-top: 0;">
                     <div class="state-title">Walang Nakitang Akda</div>
-                    <div class="state-description">Wala pang naitalang nailathalang ulat o artikulo mula kay <strong>${escapeHtml(authorNameParam)}</strong>.</div>
+                    <div class="state-description">Wala pang naitalang nailathalang ulat mula kay <strong>${escapeHtml(authorNameParam)}</strong>.</div>
                 </div>
             `;
         }
@@ -408,7 +405,7 @@ async function initAuthorPage() {
             container.innerHTML = `
                 <div class="state-container" style="margin-top: 0;">
                     <div class="state-title">Nabigo sa Pagkonekta</div>
-                    <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos. Mangyaring subukang muli mamaya.</div>
+                    <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos.</div>
                 </div>
             `;
         }
@@ -416,7 +413,7 @@ async function initAuthorPage() {
 }
 
 /* --------------------------------------------------------------------------
-   6. Page Controller: Archives / Silid-Aklatan (archives.html)
+   6. Page Controller: Archives / Silid-Aklatan
    -------------------------------------------------------------------------- */
 let allArchivesList = [];
 const archivesPerPage = 4;
@@ -428,7 +425,7 @@ async function initArchivesPage() {
 
     try {
         const response = await fetch(CONFIG.ARCHIVES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Archives.');
+        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Archives Google Sheets.');
 
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
@@ -437,7 +434,7 @@ async function initArchivesPage() {
             container.innerHTML = `
                 <div class="state-container">
                     <div class="state-title">Walang Nakitang Isyu</div>
-                    <div class="state-description">Wala pang nailalagay o naipapalabas na mga lumang isyu sa kasalukuyan.</div>
+                    <div class="state-description">Wala pang nailagay na lumang isyu sa kasalukuyan.</div>
                 </div>
             `;
             return;
@@ -464,7 +461,7 @@ async function initArchivesPage() {
         container.innerHTML = `
             <div class="state-container">
                 <div class="state-title">Nabigo sa Pagkonekta</div>
-                <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos ng silid-aklatan. Mangyaring subukang muli mamaya.</div>
+                <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos ng silid-aklatan.</div>
             </div>
         `;
     }
@@ -480,8 +477,8 @@ function renderArchivePage(page) {
     if (!allArchivesList || allArchivesList.length === 0) {
         container.innerHTML = `
             <div class="state-container">
-                <div class="state-title">Walang Nakitang Isyu</div>
-                <div class="state-description">Wala pang nailalagay na mga lumang isyu sa kasalukuyan.</div>
+                <div class="state-title">Walang Nakitang Arkibo</div>
+                <div class="state-description">Wala pang nailagay na lumang isyu.</div>
             </div>
         `;
         if (paginationContainer) paginationContainer.innerHTML = '';
@@ -537,11 +534,10 @@ function renderArchivePage(page) {
    7. Application Initializer
    -------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
-    // Global Navigation & Icons
     setupGlobalNavigation();
     if (window.lucide) lucide.createIcons();
 
-    // Conditional Page Execution based on DOM element availability
     initCategoryPage();
     initAuthorPage();
     initArchivesPage();
+});
