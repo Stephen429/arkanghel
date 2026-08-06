@@ -172,7 +172,7 @@
         <hr class="page-lead-divider">
 
         <!-- 1. MGA TAGAPAYO NG PAARALAN (SPAs) -->
-        <h2 class="editorial-section-title"><i data-lucide="award" style="width:20px; height:20px; color:var(--maroon-light);"></i> School Paper Advisers</h2>
+        <h2 class="editorial-section-title"><i data-lucide="award" style="width:20px; height:20px; color:var(--maroon-light);"></i> Mga Tagapayo ng Paaralan (SPA)</h2>
         <div class="grid-spa">
             <div class="staff-card" data-key="School Paper Adviser (English)">
                 <div class="avatar-container">ENG</div>
@@ -187,7 +187,7 @@
         </div>
 
         <!-- 2. MGA PANGUNAHING PATNUGOT (HEAD EDITORS) -->
-        <h2 class="editorial-section-title"><i data-lucide="crown" style="width:20px; height:20px; color:var(--maroon-light);"></i> Head Editors</h2>
+        <h2 class="editorial-section-title"><i data-lucide="crown" style="width:20px; height:20px; color:var(--maroon-light);"></i> Pamunuan</h2>
         
         <!-- Editor-in-Chief (Centered Top) -->
         <div class="staff-card featured-eic" data-key="Editor-in-Chief">
@@ -211,7 +211,7 @@
         </div>
 
         <!-- 3. MGA PATNUGOT NG KATEGORYA -->
-        <h2 class="editorial-section-title"><i data-lucide="layers" style="width:20px; height:20px; color:var(--maroon-light);"></i> Category Editors</h2>
+        <h2 class="editorial-section-title"><i data-lucide="layers" style="width:20px; height:20px; color:var(--maroon-light);"></i> Mga Patnugot ng Kategorya</h2>
         <div class="grid-categories">
             <div class="staff-card" data-key="News Editor">
                 <div class="avatar-container small">BAL</div>
@@ -241,10 +241,10 @@
         </div>
 
         <!-- 4. KAWANING KREATIBO AT TEKNIKAL -->
-        <h2 class="editorial-section-title"><i data-lucide="palette" style="width:20px; height:20px; color:var(--maroon-light);"></i> Creative Heads</h2>
+        <h2 class="editorial-section-title"><i data-lucide="palette" style="width:20px; height:20px; color:var(--maroon-light);"></i> Kawaning Kreatibo at Teknikal</h2>
         <div class="grid-creative">
             <div class="staff-card" data-key="Head Photojournalist">
-                <div class="avatar-container small">PJ</div>
+                <div class="avatar-container small">PH</div>
                 <div class="staff-role">Head Photojournalist</div>
                 <div class="staff-name">Naglo-load...</div>
             </div>
@@ -282,7 +282,7 @@
         async function fetchEditorialStaff() {
             try {
                 const response = await fetch(SHEET_TSV_URL);
-                if (!response.ok) throw new Error('Cannot Read Data.');
+                if (!response.ok) throw new Error('Hindi nakuhang basahin ang Google Sheets data.');
                 
                 const tsvText = await response.text();
                 const rows = tsvText.split('\n').map(row => row.split('\t'));
@@ -327,8 +327,8 @@
             } catch (error) {
                 console.error("Error loading editorial data:", error);
                 document.querySelectorAll('.staff-name').forEach(el => {
-                    if (el.textContent === 'Loading...') {
-                        el.textContent = 'Error Loading Data';
+                    if (el.textContent === 'Naglo-load...') {
+                        el.textContent = 'Nabigo sa pagkonekta';
                     }
                 });
             }
@@ -363,4 +363,24 @@
         if (themeToggleBtn) {
             themeToggleBtn.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
-                const isDarkMode 
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme_preference', isDarkMode ? 'dark' : 'light');
+                updateThemeIcon();
+            });
+        }
+
+        initTheme();
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const mobilePanel = document.getElementById('mobile-panel');
+
+        if (menuToggle && mobilePanel) {
+            menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
+        }
+        if (menuClose && mobilePanel) {
+            menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+        }
+    </script>
+</body>
+</html>
