@@ -78,20 +78,26 @@
         .page-subtitle { font-family: var(--font-google-sans); color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem; }
         .page-lead-divider { height: 2px; background: var(--maroon-main); margin-bottom: 2.5rem; border: none; }
 
-        /* Section Headings inside Editorial */
-        .editorial-section-title { font-family: var(--font-headline); font-size: 1.3rem; color: var(--text); margin: 3rem 0 1.2rem 0; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem; }
+        /* Section Divider / Header Style (Galing sa Merged Rows) */
+        .editorial-section-title { 
+            font-family: var(--font-headline); 
+            font-size: 1.3rem; 
+            color: var(--text); 
+            margin: 3rem 0 1.2rem 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            border-bottom: 1px solid var(--card-border); 
+            padding-bottom: 0.5rem; 
+            grid-column: 1 / -1; /* Sisiguraduhing sasakop sa buong lapad ng grid kung sakali */
+        }
 
         /* Staff Card Design */
         .staff-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.5rem 1rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
         .staff-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--maroon-light); }
-        
-        .staff-card.featured-eic { border-top: 4px solid var(--maroon-main); background: linear-gradient(to bottom, var(--maroon-soft), var(--card-bg)); max-width: 450px; margin: 0 auto; width: 100%; }
 
         /* Avatar Container Styling */
         .avatar-container { width: 90px; height: 90px; border-radius: 12px; background: var(--maroon-soft); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-headline); font-weight: 700; font-size: 1.4rem; color: var(--maroon-light); margin-bottom: 0.8rem; overflow: hidden; }
-        .avatar-container.large { width: 110px; height: 110px; font-size: 1.8rem; }
-        .avatar-container.small { width: 75px; height: 75px; font-size: 1.1rem; border-radius: 10px; }
-        
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
 
         .staff-role { font-family: var(--font-google-sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.2rem; }
@@ -155,8 +161,7 @@
             <li><a href="index.html#opinion">Opinyon</a></li>
             <li><a href="index.html#feature">Lathalain</a></li>
             <li><a href="index.html#scitech">Agham at Teknolohiya</a></li>
-            <li><a href="index.html#sports">Isports</a
-                                                       ></li>
+            <li><a href="index.html#sports">Isports</a></li>
             <li><a href="editorial.html" style="color:var(--maroon-light);">Lupon ng Patnugutan</a></li>
             <li><a href="archives.html">Silid-Aklatan</a></li>
             <li><a href="about.html">Tungkol sa Amin</a></li>
@@ -179,7 +184,7 @@
         &copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.
     </footer>
 
-    <!-- JavaScript na awtomatikong mag-aayos at gagawa ng cards base sa Google Sheets -->
+    <!-- JavaScript na may Detection para sa Merged Rows / Headers -->
     <script>
         lucide.createIcons();
 
@@ -194,36 +199,68 @@
                 const rows = tsvText.split('\n').map(row => row.split('\t'));
                 
                 const container = document.getElementById('editorial-container');
-                container.innerHTML = ''; // Linisin ang loading text
+                container.innerHTML = ''; 
 
+                let gridWrapperOpen = false;
                 let htmlContent = '';
 
-                // Hatiin o ilagay ang bawat row mula sa Sheets patungo sa HTML cards
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
-                    if (cols.length >= 3) {
-                        const name = cols[0].trim();
-                        const position = cols[1].trim();
-                        const photoLink = cols[2].trim();
-                        
-                        if (!name && !position) continue;
+                    if (cols.length === 0) continue;
 
-                        let avatarContent = position.substring(0, 3).toUpperCase();
-                        if (photoLink) {
-                            avatarContent = `<img src="assets/staff/${photoLink}" alt="${name}">`;
+                    const col0 = cols[0] ? cols[0].trim() : '';
+                    const col1 = cols[1] ? cols[1].trim() : '';
+                    const col2 = cols[2] ? cols[2].trim() : '';
+                    
+                    if (!col0 && !col1 && !col2) continue;
+
+                    // PAG-DETECT KUNG ANG ROW AY MERGED (Ginawang Header / Divider sa Sheets)
+                    // Kapag may laman ang unang column pero WALANG laman ang ikalawa at ikatlong column (o kaya ay sadyang header row)
+                    const isMergedHeader = col0 && (!col1 && !col2);
+
+                    if (isMergedHeader) {
+                        // Kung may naka-bukas na grid, isara muna natin bago ilagay ang divider header
+                        if (gridWrapperOpen) {
+                            htmlContent += `</div>`;
+                            gridWrapperOpen = false;
+                        }
+
+                        // Idagdag ito bilang isang section header/divider
+                        htmlContent += `
+                            <h2 class="editorial-section-title">
+                                <i data-lucide="bookmark" style="width:20px; height:20px; color:var(--maroon-light);"></i> 
+                                ${col0}
+                            </h2>
+                        `;
+                    } else {
+                        // Regular na staff card ito
+                        // Kung wala pang nakabukas na grid, buksan natin ang .staff-grid container
+                        if (!gridWrapperOpen) {
+                            htmlContent += `<div class="staff-grid">`;
+                            gridWrapperOpen = true;
+                        }
+
+                        let avatarContent = col1 ? col1.substring(0, 3).toUpperCase() : 'STAFF';
+                        if (col2) {
+                            avatarContent = `<img src="assets/staff/${col2}" alt="${col0}">`;
                         }
 
                         htmlContent += `
                             <div class="staff-card">
                                 <div class="avatar-container">${avatarContent}</div>
-                                <div class="staff-role">${position}</div>
-                                <div class="staff-name">${name || 'Bakante'}</div>
+                                <div class="staff-role">${col1}</div>
+                                <div class="staff-name">${col0 || 'Bakante'}</div>
                             </div>
                         `;
                     }
                 }
 
-                container.innerHTML = `<div class="staff-grid">${htmlContent}</div>`;
+                // Isara ang huling grid kung sakaling nakabukas pa ito
+                if (gridWrapperOpen) {
+                    htmlContent += `</div>`;
+                }
+
+                container.innerHTML = htmlContent;
                 lucide.createIcons();
 
             } catch (error) {
