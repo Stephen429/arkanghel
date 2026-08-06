@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html lang="tl">
+<html lang="fil">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupon ng Patnugutan | Ang Arkanghel</title>
-    <!-- Google Fonts -->
+    <title>Opinyon | Ang Arkanghel</title>
+    
+    <!-- Meta Tags for SEO and Social Sharing -->
+    <meta name="description" content="Mga pinakabagong balita at ulat mula sa Ang Arkanghel, ang opisyal na pahayagang pampaaralan.">
+    <link rel="icon" type="image/png" href="assets/arkanghel.png">
+
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Stylesheets -->
+    <!-- Master Stylesheet -->
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="site-header">
-        <a href="index.html" class="logo-container">
-            <img src="assets/arkanghel.png" alt="Ang Arkanghel Logo" class="logo-img">
+    <!-- Header & Navigation -->
+    <header>
+        <a href="index.html" class="logo-container" aria-label="Pangunahing Pahina ng Ang Arkanghel">
+            <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
         </a>
-        
-            <div class="header-controls">
+
+    <div class="header-controls">
         <div class="desktop-nav-wrapper">
             <ul class="desktop-nav">
                 <li>
@@ -62,17 +65,27 @@
         <li><a href="aklatan.html">Silid-Aklatan</a></li>
         <li><a href="tungkol.html">Tungkol sa Amin</a></li>
     </ul>
-</aside>
+</div>
 
-    <!-- Main Content Layout -->
-    <main class="main-container main-editorial">
-        <h1 class="page-title">Lupon ng Patnugutan</h1>
-        <p class="page-subtitle">Taong Panuruan 2026–2027</p>
-        <hr class="page-lead-divider">
+    <main>
+        <!-- Page Title & Header -->
+        <header class="category-header">
+            <span class="category-tag">Kategorya</span>
+            <h1 class="category-title">Opinyon</h1>
+        </header>
 
-        <div id="editorial-container">
-            <p class="status-message">Kinukuha ang talaan ng lupon...</p>
-        </div>
+        <!-- Articles Container (Dynamically populated by main.js) -->
+        <section id="articles-list" class="compact-list" aria-live="polite">
+            <div class="state-container">
+                <div class="state-title">Kinukuha ang mga artikulo...</div>
+                <div class="state-description">
+                    Mangyaring maghintay habang pino-proseso ang mga pinakabagong ulat.
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Pagination Controls -->
+        <nav id="pagination-controls" class="pagination-container" aria-label="Pahina ng Balita"></nav>
     </main>
 
     <!-- Footer -->
@@ -80,8 +93,7 @@
         &copy; Ang Arkanghel </br> <em>Lilipad. Maghahayag.<em> </br>All Rights Reserved 2026.
     </footer>
 
-    <!-- Shared & Page-Specific Scripts -->
+    <!-- Master Application Script -->
     <script src="scripts/main.js"></script>
-    <script src="scripts/editorial.js"></script>
 </body>
 </html>

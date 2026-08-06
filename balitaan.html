@@ -1,137 +1,47 @@
 <!DOCTYPE html>
-<html lang="tl">
+<html lang="fil">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balitaan | Ang Arkanghel</title>
-    <!-- Opisyal na Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    
+    <!-- Meta Tags for SEO and Social Sharing -->
+    <meta name="description" content="Mga pinakabagong balita at ulat mula sa Ang Arkanghel, ang opisyal na pahayagang pampaaralan.">
+    <link rel="icon" type="image/png" href="assets/arkanghel.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            --maroon-dark: #4a000b;
-            --maroon-main: #6b0d18;
-            --maroon-accent: #800020;
-            --maroon-light: #a31c2b;
-            --maroon-soft: rgba(107, 13, 24, 0.04);
-            --bg: #f8f5f5;
-            --text: #1a1516;
-            --text-muted: #5c5052;
-            --card-bg: #ffffff;
-            --card-border: #e6dbdc;
-            --nav-overlay: #ffffff;
-            --shadow-subtle: 0 4px 20px rgba(74, 0, 11, 0.03);
-            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
-            --font-headline: 'Literata', serif;
-            --font-google-sans: 'Google Sans', sans-serif;
-            --font-ui: 'Inter', sans-serif;
-        }
 
-        body.dark-mode { 
-            --bg: #0d0809; 
-            --text: #f5ecee; 
-            --text-muted: #b3a1a4; 
-            --card-bg: #161012; 
-            --card-border: #2c1d20;
-            --nav-overlay: #161012;
-            --maroon-soft: rgba(163, 28, 43, 0.15);
-            --shadow-subtle: 0 4px 20px rgba(0,0,0,0.3);
-            --shadow-md: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        * { box-sizing: border-box; }
-        html, body { max-width: 100vw; overflow-x: hidden; }
-        body { background: var(--bg); color: var(--text); font-family: var(--font-ui); margin: 0; display: flex; flex-direction: column; min-height: 100vh; line-height: 1.6; }
-        
-        /* Header Navigation Styles */
-        header { padding: 0.75rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 2px solid var(--maroon-main); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-        .logo-container { display: flex; align-items: center; text-decoration: none; }
-        .logo-img { height: 34px; width: auto; object-fit: contain; } /* Adjusted size for Wordmark */
-        
-        .header-controls { display: flex; gap: 20px; align-items: center; }
-        .desktop-nav-wrapper { position: relative; }
-        .desktop-nav { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; align-items: center; }
-        .desktop-nav li { position: relative; }
-        .desktop-nav a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.88rem; transition: color 0.2s; display: flex; align-items: center; gap: 4px; font-family: var(--font-google-sans); }
-        .desktop-nav a:hover, .active-link { color: var(--maroon-light) !important; font-weight: 600; }
-        
-        .submenu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow-md); padding: 0.5rem 0; list-style: none; min-width: 180px; border-radius: 8px; z-index: 10; }
-        .submenu li { margin: 0; }
-        .submenu a { padding: 8px 16px; font-size: 0.85rem; }
-        .desktop-nav li:hover .submenu { display: block; }
-
-        .icon-btn { cursor: pointer; border: none; background: transparent; color: var(--text); padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-        .icon-btn:hover { background: var(--maroon-soft); color: var(--maroon-light); }
-
-        /* Mobile Drawer Navigation */
-        .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--card-border); box-shadow: -4px 0 25px rgba(0,0,0,0.2); z-index: 200; padding: 2rem 1.5rem; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
-        .mobile-nav-panel.open { right: 0; }
-        .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
-        .mobile-nav-links li { margin-bottom: 1.2rem; }
-        .mobile-nav-links a { text-decoration: none; color: var(--text); font-size: 1.05rem; font-weight: 600; font-family: var(--font-google-sans); }
-        .mobile-menu-trigger { display: none; }
-
-        /* Main Content Layout */
-        main { max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; width: 100%; flex: 1; }
-        
-        .category-header { margin-bottom: 2.5rem; border-bottom: 2px solid var(--maroon-main); padding-bottom: 1rem; }
-        .category-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--maroon-light); font-family: var(--font-google-sans); margin-bottom: 0.5rem; display: block; }
-        .category-title { font-family: var(--font-headline); font-size: 2.4rem; font-weight: 700; color: var(--text); margin: 0; }
-
-        /* Compact Article List Format */
-        .compact-list { display: flex; flex-direction: column; gap: 16px; }
-        .compact-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 140px; gap: 20px; align-items: center; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; box-shadow: var(--shadow-subtle); }
-        .compact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--maroon-main); }
-        
-        .compact-info { display: flex; flex-direction: column; gap: 6px; }
-        .compact-meta { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-google-sans); font-weight: 600; display: flex; gap: 12px; }
-        .compact-headline { font-family: var(--font-headline); font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1.35; margin: 0; }
-        .compact-excerpt { font-size: 0.88rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; font-family: var(--font-google-sans); }
-        
-        .compact-thumb { width: 140px; height: 95px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); background: var(--bg); }
-
-        /* Pagination Container */
-        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 3.5rem; }
-        .page-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text); padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: var(--font-google-sans); transition: all 0.2s; }
-        .page-btn:hover { border-color: var(--maroon-main); color: var(--maroon-light); }
-        .page-btn.active { background: var(--maroon-main); color: #fff; border-color: var(--maroon-main); }
-
-        /* Footer Styles */
-        footer { text-align: center; padding: 2.5rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: auto; background: var(--card-bg); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .desktop-nav-wrapper { display: none; }
-            .mobile-menu-trigger { display: flex; }
-            .compact-card { grid-template-columns: 1fr; }
-            .compact-thumb { width: 100%; height: 160px; order: -1; }
-            .category-title { font-size: 1.8rem; }
-        }
-    </style>
+    <!-- Master Stylesheet -->
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
-<header>
-    <a href="index.html" class="logo-container">
-        <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
-    </a>
-    
+    <!-- Header & Navigation -->
+    <header>
+        <a href="index.html" class="logo-container" aria-label="Pangunahing Pahina ng Ang Arkanghel">
+            <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
+        </a>
+
     <div class="header-controls">
         <div class="desktop-nav-wrapper">
             <ul class="desktop-nav">
                 <li>
                     <a href="#" class="active-link">Mga Kategorya <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
                     <ul class="submenu">
-                        <li><a href="balitaan.html">Balitaan</a></li>
-                        <li><a href="#opinion">Opinyon</a></li>
-                        <li><a href="#feature">Lathalain</a></li>
-                        <li><a href="#scitech">Agham at Teknolohiya</a></li>
-                        <li><a href="#sports">Isports</a></li>
+                        <li><a href="balitaan.html">Balita</a></li>
+                        <li><a href="opinyon.html">Opinyon</a></li>
+                        <li><a href="lathalain.html">Lathalain</a></li>
+                        <li><a href="agham.html">Ag-Tek</a></li>
+                        <li><a href="isports.html">Isports</a></li>
                     </ul>
                 </li>
-                <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
-                <li><a href="archives.html">Silid-Aklatan</a></li>
-                <li><a href="about.html">Tungkol sa Amin</a></li>
+                <li><a href="patnugutan.html">Lupon ng Patnugutan</a></li>
+                <li><a href="aklatan.html">Silid-Aklatan</a></li>
+                <li><a href="tungkol.html">Tungkol sa Amin</a></li>
             </ul>
         </div>
         
@@ -140,255 +50,50 @@
     </div>
 </header>
 
-<!-- Mobile Drawer Navigation -->
 <div class="mobile-nav-panel" id="mobile-panel">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-family:'Literata', serif; font-weight:700; color:var(--maroon-light);">PAGLALAYAG</span>
+        <span style="font-family:'Literata'; font-weight:700; color:var(--maroon-light);">Ang Arkanghel</span>
         <button id="menu-close" class="icon-btn"><i data-lucide="x"></i></button>
     </div>
     <ul class="mobile-nav-links">
         <li><a href="balitaan.html">Balitaan</a></li>
-        <li><a href="#opinion">Opinyon</a></li>
-        <li><a href="#feature">Lathalain</a></li>
-        <li><a href="#scitech">Agham at Teknolohiya</a></li>
-        <li><a href="#sports">Isports</a></li>
-        <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
-        <li><a href="archives.html">Silid-Aklatan</a></li>
-        <li><a href="about.html">Tungkol sa Amin</a></li>
+        <li><a href="opinyon.html">Opinyon</a></li>
+        <li><a href="lathalain.html">Lathalain</a></li>
+        <li><a href="agham.html">Ag-Tek</a></li>
+        <li><a href="isports.html">Isports</a></li>
+        <li><a href="patnugutan.html">Lupon ng Patnugutan</a></li>
+        <li><a href="aklatan.html">Silid-Aklatan</a></li>
+        <li><a href="tungkol.html">Tungkol sa Amin</a></li>
     </ul>
 </div>
 
-<main>
-    <div class="category-header">
-        <span class="category-tag">Mga Kategorya</span>
-        <h1 class="category-title">Balitaan</h1>
-    </div>
+    <main>
+        <!-- Page Title & Header -->
+        <header class="category-header">
+            <span class="category-tag">Kategorya</span>
+            <h1 class="category-title">Balitaan</h1>
+        </header>
 
-    <!-- Compact Articles List -->
-    <div id="articles-list" class="compact-list">
-        <div style="text-align:center; padding: 3rem; color:var(--text-muted);">Maghintay lamang...</div>
-    </div>
+        <!-- Articles Container (Dynamically populated by main.js) -->
+        <section id="articles-list" class="compact-list" aria-live="polite">
+            <div class="state-container">
+                <div class="state-title">Kinukuha ang mga balita...</div>
+                <div class="state-description">
+                    Mangyaring maghintay habang pino-proseso ang mga pinakabagong ulat.
+                </div>
+            </div>
+        </section>
 
-    <!-- Pagination Button Area (Awtomatikong lalabas kung hihigit sa 10 ang artikulo) -->
-    <div id="pagination-controls" class="pagination-container"></div>
-</main>
+        <!-- Dynamic Pagination Controls -->
+        <nav id="pagination-controls" class="pagination-container" aria-label="Pahina ng Balita"></nav>
+    </main>
 
-<footer>&copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.</footer>
+    <!-- Footer -->
+    <footer>
+        &copy; Ang Arkanghel </br> <em>Lilipad. Maghahayag.<em> </br>All Rights Reserved 2026.
+    </footer>
 
-<script>
-    lucide.createIcons();
-
-    // Light/Dark Mode Handler
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme_preference');
-        const hour = new Date().getHours();
-        const isNight = hour >= 18 || hour < 6;
-
-        if (savedTheme === 'dark' || (!savedTheme && isNight)) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-        updateThemeIcon();
-    }
-
-    function updateThemeIcon() {
-        const icon = document.getElementById('theme-icon');
-        if (icon) {
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            icon.setAttribute('data-lucide', isDarkMode ? 'moon' : 'sun');
-            lucide.createIcons();
-        }
-    }
-
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme_preference', isDarkMode ? 'dark' : 'light');
-            updateThemeIcon();
-        });
-    }
-
-    initTheme();
-
-    // Mobile Panel Handlers
-    const menuToggle = document.getElementById('menu-toggle');
-    const menuClose = document.getElementById('menu-close');
-    const mobilePanel = document.getElementById('mobile-panel');
-
-    if (menuToggle && mobilePanel) {
-        menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
-    }
-    if (menuClose && mobilePanel) {
-        menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
-    }
-
-    // Google Sheets TSV Link
-    const TSV_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
-
-    let allNewsArticles = [];
-    let currentPage = 1;
-    const articlesPerPage = 10;
-
-    // Date Formatter Engine (Converts 8/1/2026 or 2026-08-01 into "Agosto 1, 2026")
-    function formatFilipinoDate(dateInput) {
-        if (!dateInput) return '';
-        const d = new Date(dateInput);
-        if (isNaN(d.getTime())) return dateInput;
-
-        const months = [
-            "Enero", "Pebredo", "Marso", "Abril", "Mayo", "Hunyo", 
-            "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
-        ];
-        
-        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-    }
-
-    async function fetchArticleThumbnail(articleUrl) {
-        if (!articleUrl || articleUrl === '#') return '';
-        try {
-            const response = await fetch(articleUrl);
-            const htmlText = await response.text();
-            
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlText, 'text/html');
-            
-            const imageBox = doc.querySelector('.article-image-box');
-            if (imageBox) {
-                const imgTag = imageBox.querySelector('img');
-                if (imgTag && imgTag.src) {
-                    return imgTag.src;
-                }
-            }
-            return '';
-        } catch (e) {
-            console.error('Hindi nakuha ang larawan mula sa:', articleUrl, e);
-            return '';
-        }
-    }
-
-    async function loadNewsFromTSV() {
-        try {
-            const response = await fetch(TSV_SHEET_URL); 
-            const tsvText = await response.text();
-            
-            const rows = tsvText.split('\n').map(row => row.split('\t'));
-            const headers = rows[0].map(h => h.trim().toUpperCase());
-            
-            const typeIdx = headers.indexOf('TYPE');
-            const dateIdx = headers.indexOf('DATE');
-            const titleIdx = headers.indexOf('HEADLINE/TITLE');
-            const leadIdx = headers.indexOf('LEAD SENTENCE');
-            const linkIdx = headers.indexOf('LINK');
-            const authorIdx = headers.indexOf('AUTHOR');
-
-            let rawArticles = [];
-
-            for (let i = 1; i < rows.length; i++) {
-                const cols = rows[i];
-                if (cols.length >= headers.length) {
-                    const typeValue = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
-                    
-                    if (typeValue === 'NEWS' || typeValue === 'BALITAAN') {
-                        const rawDate = cols[dateIdx] ? cols[dateIdx].trim() : '';
-                        rawArticles.push({
-                            type: typeValue,
-                            date: formatFilipinoDate(rawDate),
-                            title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
-                            lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng balitang ito.',
-                            link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
-                            author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan',
-                            image: ''
-                        });
-                    }
-                }
-            }
-
-            // Sabay-sabay na kukunin ang mga larawan bago i-render para lumitaw kaagad
-            allNewsArticles = await Promise.all(rawArticles.map(async (art) => {
-                if (art.link && art.link !== '#') {
-                    const fetchedImg = await fetchArticleThumbnail(art.link);
-                    if (fetchedImg) {
-                        art.image = fetchedImg;
-                    }
-                }
-                return art;
-            }));
-
-            renderPage(1);
-
-        } catch (error) {
-            console.error('Error sa pag-load:', error);
-            document.getElementById('articles-list').innerHTML = `
-                <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
-                    <strong>Paumanhin, hindi ma-load ang mga balita sa kasalukuyan.</strong><br>
-                    <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang koneksyon o ang TSV URL ng Google Sheets.</span>
-                </div>`;
-        }
-    }
-
-    function renderPage(page) {
-        currentPage = page;
-        const listContainer = document.getElementById('articles-list');
-        const paginationContainer = document.getElementById('pagination-controls');
-        
-        if (allNewsArticles.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; padding: 3rem; color:var(--text-muted);">Walang nakitang artikulo sa kategoryang ito.</div>`;
-            paginationContainer.innerHTML = '';
-            return;
-        }
-
-        const startIndex = (page - 1) * articlesPerPage;
-        const endIndex = startIndex + articlesPerPage;
-        const paginatedArticles = allNewsArticles.slice(startIndex, endIndex);
-
-        let htmlContent = '';
-        paginatedArticles.forEach(art => {
-            const imageHTML = art.image 
-                ? `<img src="${art.image}" alt="${art.title}" class="compact-thumb">` 
-                : '';
-            
-            const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
-
-            htmlContent += `
-                <a href="${art.link}" class="compact-card" style="${cardStyle}">
-                    <div class="compact-info">
-                        <div class="compact-meta">
-                            <span>${art.date}</span>
-                            <span>•</span>
-                            <span>Mula kay ${art.author}</span>
-                        </div>
-                        <h2 class="compact-headline">${art.title}</h2>
-                        <p class="compact-excerpt">${art.lead}</p>
-                    </div>
-                    ${imageHTML}
-                </a>
-            `;
-        });
-
-        listContainer.innerHTML = htmlContent;
-
-        // Pagination Rule (Kung hihigit sa 10 ang artikulo)
-        if (allNewsArticles.length > 10) {
-            const totalPages = Math.ceil(allNewsArticles.length / articlesPerPage);
-            let paginationHTML = '';
-            
-            for (let p = 1; p <= totalPages; p++) {
-                paginationHTML += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="renderPage(${p})">${p}</button>`;
-            }
-            paginationContainer.innerHTML = paginationHTML;
-        } else {
-            paginationContainer.innerHTML = '';
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        lucide.createIcons();
-    }
-
-    loadNewsFromTSV();
-</script>
+    <!-- Master Application Script -->
+    <script src="scripts/main.js"></script>
 </body>
-  </html>
-                                                            
+</html>
