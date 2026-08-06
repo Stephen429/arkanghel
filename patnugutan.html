@@ -87,7 +87,7 @@
         
         .staff-card.featured-eic { border-top: 4px solid var(--maroon-main); background: linear-gradient(to bottom, var(--maroon-soft), var(--card-bg)); max-width: 450px; margin: 0 auto; width: 100%; }
 
-        /* Square Image / Avatar Container Styling */
+        /* Avatar Container Styling */
         .avatar-container { width: 90px; height: 90px; border-radius: 12px; background: var(--maroon-soft); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-headline); font-weight: 700; font-size: 1.4rem; color: var(--maroon-light); margin-bottom: 0.8rem; overflow: hidden; }
         .avatar-container.large { width: 110px; height: 110px; font-size: 1.8rem; }
         .avatar-container.small { width: 75px; height: 75px; font-size: 1.1rem; border-radius: 10px; }
@@ -97,11 +97,8 @@
         .staff-role { font-family: var(--font-google-sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.2rem; }
         .staff-name { font-family: var(--font-headline); font-size: 1.05rem; font-weight: 700; color: var(--text); }
 
-        /* Custom Grids */
-        .grid-spa { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        .grid-heads { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; }
-        .grid-categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-        .grid-creative { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+        /* Grids */
+        .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 1.5rem; }
 
         /* Footer */
         footer { text-align: center; padding: 3rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 5rem; background: var(--card-bg); }
@@ -110,7 +107,7 @@
         @media (max-width: 768px) {
             .desktop-nav-wrapper { display: none; }
             .mobile-menu-trigger { display: flex; }
-            .grid-spa, .grid-heads, .grid-categories, .grid-creative { grid-template-columns: 1fr; }
+            .staff-grid { grid-template-columns: 1fr; }
             .page-title { font-size: 2rem; }
         }
     </style>
@@ -171,100 +168,9 @@
         <p class="page-subtitle">Taong Panuruan 2026–2027</p>
         <hr class="page-lead-divider">
 
-        <!-- 1. MGA TAGAPAYO NG PAARALAN (SPAs) -->
-        <h2 class="editorial-section-title"><i data-lucide="award" style="width:20px; height:20px; color:var(--maroon-light);"></i> Mga Tagapayo ng Paaralan (SPA)</h2>
-        <div class="grid-spa">
-            <div class="staff-card" data-key="School Paper Adviser (English)">
-                <div class="avatar-container">ENG</div>
-                <div class="staff-role">School Paper Adviser (English)</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="School Paper Adviser (Filipino)">
-                <div class="avatar-container">FIL</div>
-                <div class="staff-role">School Paper Adviser (Filipino)</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
+        <div id="editorial-container">
+            <p style="text-align: center; color: var(--text-muted);">Kinukuha ang talaan ng lupon...</p>
         </div>
-
-        <!-- 2. MGA PANGUNAHING PATNUGOT (HEAD EDITORS) -->
-        <h2 class="editorial-section-title"><i data-lucide="crown" style="width:20px; height:20px; color:var(--maroon-light);"></i> Pamunuan</h2>
-        
-        <!-- Editor-in-Chief (Centered Top) -->
-        <div class="staff-card featured-eic" data-key="Editor-in-Chief">
-            <div class="avatar-container large">EIC</div>
-            <div class="staff-role">Editor-in-Chief</div>
-            <div class="staff-name">Naglo-load...</div>
-        </div>
-
-        <!-- Assistant EIC & Managing Editor Grid -->
-        <div class="grid-heads">
-            <div class="staff-card" data-key="Assistant Editor-in-Chief">
-                <div class="avatar-container">AEIC</div>
-                <div class="staff-role">Assistant Editor-in-Chief</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Managing Editor">
-                <div class="avatar-container">ME</div>
-                <div class="staff-role">Managing Editor</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-        </div>
-
-        <!-- 3. MGA PATNUGOT NG KATEGORYA -->
-        <h2 class="editorial-section-title"><i data-lucide="layers" style="width:20px; height:20px; color:var(--maroon-light);"></i> Mga Patnugot ng Kategorya</h2>
-        <div class="grid-categories">
-            <div class="staff-card" data-key="News Editor">
-                <div class="avatar-container small">BAL</div>
-                <div class="staff-role">Balitaan</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Opinion Editor">
-                <div class="avatar-container small">OPI</div>
-                <div class="staff-role">Opinyon</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Feature Editor">
-                <div class="avatar-container small">LAT</div>
-                <div class="staff-role">Lathalain</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Science and Technology Editor">
-                <div class="avatar-container small">SCI</div>
-                <div class="staff-role">Agham at Teknolohiya</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Sports Editor">
-                <div class="avatar-container small">ISP</div>
-                <div class="staff-role">Isports</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-        </div>
-
-        <!-- 4. KAWANING KREATIBO AT TEKNIKAL -->
-        <h2 class="editorial-section-title"><i data-lucide="palette" style="width:20px; height:20px; color:var(--maroon-light);"></i> Kawaning Kreatibo at Teknikal</h2>
-        <div class="grid-creative">
-            <div class="staff-card" data-key="Head Photojournalist">
-                <div class="avatar-container small">PH</div>
-                <div class="staff-role">Head Photojournalist</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Head Layout Artist">
-                <div class="avatar-container small">LAY</div>
-                <div class="staff-role">Head Layout Artist</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Head Cartoonist">
-                <div class="avatar-container small">CAR</div>
-                <div class="staff-role">Head Cartoonist</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-            <div class="staff-card" data-key="Head Copywriter">
-                <div class="avatar-container small">COPY</div>
-                <div class="staff-role">Head Copywriter</div>
-                <div class="staff-name">Naglo-load...</div>
-            </div>
-        </div>
-
     </main>
 
     <!-- Footer -->
@@ -272,11 +178,10 @@
         &copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.
     </footer>
 
-    <!-- JavaScript para sa Google Sheets TSV Fetcher at Dynamic Position/Name -->
+    <!-- JavaScript na awtomatikong mag-aayos at gagawa ng cards base sa Google Sheets -->
     <script>
         lucide.createIcons();
 
-        // Palitan ang URL na ito ng iyong tunay na Google Sheets Published TSV URL
         const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=1368403362&single=true&output=tsv';
 
         async function fetchEditorialStaff() {
@@ -287,50 +192,42 @@
                 const tsvText = await response.text();
                 const rows = tsvText.split('\n').map(row => row.split('\t'));
                 
-                const staffData = {};
-                // Binabasa ang bawat row mula sa Sheets (Col 0: Name, Col 1: Position, Col 2: Photo Link)
+                const container = document.getElementById('editorial-container');
+                container.innerHTML = ''; // Linisin ang loading text
+
+                let htmlContent = '';
+
+                // Hatiin o ilagay ang bawat row mula sa Sheets patungo sa HTML cards
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
                     if (cols.length >= 3) {
                         const name = cols[0].trim();
-                        const sheetPosition = cols[1].trim();
+                        const position = cols[1].trim();
                         const photoLink = cols[2].trim();
                         
-                        // I-normalize ang position para maging maluwag sa spacing/capitalization
-                        const cleanKey = sheetPosition.toLowerCase();
-                        staffData[cleanKey] = { name, sheetPosition, photoLink };
+                        if (!name && !position) continue;
+
+                        let avatarContent = position.substring(0, 3).toUpperCase();
+                        if (photoLink) {
+                            avatarContent = `<img src="assets/staff/${photoLink}" alt="${name}">`;
+                        }
+
+                        htmlContent += `
+                            <div class="staff-card">
+                                <div class="avatar-container">${avatarContent}</div>
+                                <div class="staff-role">${position}</div>
+                                <div class="staff-name">${name || 'Bakante'}</div>
+                            </div>
+                        `;
                     }
                 }
 
-                // I-aplay ang nakuha mula sa Sheets sa mga naka-angkop na HTML cards
-                document.querySelectorAll('.staff-card').forEach(card => {
-                    const key = card.getAttribute('data-key').toLowerCase();
-                    const nameEl = card.querySelector('.staff-name');
-                    const roleEl = card.querySelector('.staff-role');
-                    const avatarContainer = card.querySelector('.avatar-container');
-
-                    if (staffData[key]) {
-                        const { name, sheetPosition, photoLink } = staffData[key];
-                        
-                        // Kung ano ang isinulat sa Sheets para sa position, iyon ang direktang ipapakita sa badge!
-                        roleEl.textContent = sheetPosition;
-                        nameEl.textContent = name;
-
-                        if (photoLink) {
-                            avatarContainer.innerHTML = `<img src="assets/staff/${photoLink}" alt="${name}">`;
-                        }
-                    } else {
-                        nameEl.textContent = 'Bakante';
-                    }
-                });
+                container.innerHTML = `<div class="staff-grid">${htmlContent}</div>`;
+                lucide.createIcons();
 
             } catch (error) {
                 console.error("Error loading editorial data:", error);
-                document.querySelectorAll('.staff-name').forEach(el => {
-                    if (el.textContent === 'Naglo-load...') {
-                        el.textContent = 'Nabigo sa pagkonekta';
-                    }
-                });
+                document.getElementById('editorial-container').innerHTML = `<p style="text-align: center; color: var(--maroon-light);">Nabigo sa pagkuha ng talaan mula sa Google Sheets.</p>`;
             }
         }
 
