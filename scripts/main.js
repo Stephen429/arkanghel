@@ -11,7 +11,7 @@ const CONFIG = {
 };
 
 /* --------------------------------------------------------------------------
-   2. Common Utilities & Shared Functions
+   2. Common Utilities
    -------------------------------------------------------------------------- */
 function escapeHtml(str) {
     if (!str) return '';
@@ -62,19 +62,16 @@ async function fetchArticleThumbnail(articleUrl) {
         const imageBox = doc.querySelector('.article-image-box');
         if (imageBox) {
             const imgTag = imageBox.querySelector('img');
-            if (imgTag && imgTag.src) {
-                return imgTag.src;
-            }
+            if (imgTag && imgTag.src) return imgTag.src;
         }
         return '';
     } catch (e) {
-        console.error('Hindi nakuha ang larawan mula sa:', articleUrl, e);
         return '';
     }
 }
 
 /* --------------------------------------------------------------------------
-   3. UI Features: Theme Toggle & Navigation Drawer
+   3. Global Navigation & Theme
    -------------------------------------------------------------------------- */
 function initTheme() {
     const savedTheme = localStorage.getItem('theme_preference');
@@ -124,14 +121,86 @@ function setupGlobalNavigation() {
 }
 
 /* --------------------------------------------------------------------------
-   4. Universal Category Page Controller
+   4. Homepage Controller (index.html)
    -------------------------------------------------------------------------- */
-let categoryState = {
-    articles: [],
-    currentPage: 1,
-    perPage: 10,
-    targetCategory: ''
-};
+async function initHomePage() {
+    const homepageSections = document.querySelectorAll('.category-preview-grid');
+    if (homepageSections.length === 0) return;
+
+    try {
+        const response = await fetch(CONFIG.ARTICLES_TSV);
+        if (!response.ok) return;
+
+        const tsvText = await response.text();
+        const rows = tsvText.split('\n').map(row => row.split('\t'));
+        if (rows.length <= 1) return;
+
+        const headers = rows[0].map(h => h.trim().toUpperCase());
+        const typeIdx = headers.indexOf('TYPE');
+        const dateIdx = headers.indexOf('DATE');
+        const titleIdx = headers.indexOf('HEADLINE/TITLE');
+        const leadIdx = headers.indexOf('LEAD SENTENCE');
+        const linkIdx = headers.indexOf('LINK');
+        const authorIdx = headers.indexOf('AUTHOR');
+
+        const articlesByCategory = {};
+
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i];
+            if (cols.length >= headers.length) {
+                const typeVal = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
+                if (!articlesByCategory[typeVal]) articlesByCategory[typeVal] = [];
+
+                articlesByCategory[typeVal].push({
+                    title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
+                    lead: cols[leadIdx] ? cols[leadIdx].trim() : '',
+                    link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
+                    date: formatDateToFilipino(cols[dateIdx] ? cols[dateIdx].trim() : ''),
+                    author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan'
+                });
+            }
+        }
+
+        homepageSections.forEach(grid => {
+            const cat = grid.getAttribute('data-category');
+            if (!cat) return;
+
+            const categoryArticles = articlesByCategory[cat.toUpperCase()] || [];
+            if (categoryArticles.length === 0) {
+                grid.innerHTML = `<div class="state-container" style="grid-column: 1/-1;"><div class="state-description">Walang kasalukuyang ulat sa kategoryang ito.</div></div>`;
+                return;
+            }
+
+            // Display top 2 recent articles per section on homepage
+            const topArticles = categoryArticles.slice(0, 2);
+            let html = '';
+            topArticles.forEach(art => {
+                html += `
+                    <a href="${escapeHtml(art.link)}" class="article-card">
+                        <div>
+                            <div class="article-category">${escapeHtml(cat)}</div>
+                            <h3 class="article-title">${escapeHtml(art.title)}</h3>
+                            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.4;">${escapeHtml(art.lead)}</p>
+                        </div>
+                        <div class="article-meta">
+                            <span>${escapeHtml(art.date)}</span>
+                            <span class="article-read-text">Basahin &rarr;</span>
+                        </div>
+                    </a>
+                `;
+            });
+            grid.innerHTML = html;
+        });
+
+    } catch (e) {
+        console.error("Error loading homepage contents:", e);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   5. Category Pages Controller (Balitaan, Opinyon, etc.)
+   -------------------------------------------------------------------------- */
+let categoryState = { articles: [], currentPage: 1, perPage: 10, targetCategory: '' };
 
 async function initCategoryPage() {
     const listContainer = document.getElementById('articles-list');
@@ -139,18 +208,16 @@ async function initCategoryPage() {
 
     const titleElement = document.querySelector('.category-title') || document.querySelector('.page-header h1');
     const detectedTitle = titleElement ? titleElement.textContent.trim().toUpperCase() : '';
-    
     categoryState.targetCategory = detectedTitle;
 
     try {
         const response = await fetch(CONFIG.ARTICLES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
+        if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
 
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
-
         if (rows.length <= 1) {
-            listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div><div class="state-description">Walang nakitang artikulo sa kategoryang ito.</div></div>`;
+            listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div></div>`;
             return;
         }
 
@@ -163,19 +230,16 @@ async function initCategoryPage() {
         const authorIdx = headers.indexOf('AUTHOR');
 
         let rawArticles = [];
-
         for (let i = 1; i < rows.length; i++) {
             const cols = rows[i];
             if (cols.length >= headers.length) {
                 const typeVal = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
-
                 if (isCategoryMatch(typeVal, categoryState.targetCategory)) {
-                    const rawDate = cols[dateIdx] ? cols[dateIdx].trim() : '';
                     rawArticles.push({
                         type: typeVal,
-                        date: formatDateToFilipino(rawDate),
+                        date: formatDateToFilipino(cols[dateIdx] ? cols[dateIdx].trim() : ''),
                         title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
-                        lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng artikulong ito.',
+                        lead: cols[leadIdx] ? cols[leadIdx].trim() : '',
                         link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
                         author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan',
                         image: ''
@@ -195,36 +259,18 @@ async function initCategoryPage() {
         renderCategoryPage(1);
 
     } catch (error) {
-        console.error('Error sa pag-load ng kategorya:', error);
-        listContainer.innerHTML = `
-            <div class="state-container">
-                <div class="state-title">Paumanhin</div>
-                <div class="state-description">Hindi ma-load ang mga artikulo sa kasalukuyan. Suriin ang koneksyon o ang TSV URL ng Google Sheets.</div>
-            </div>`;
+        listContainer.innerHTML = `<div class="state-container"><div class="state-title">Paumanhin</div><div class="state-description">Hindi ma-load ang mga artikulo sa kasalukuyan.</div></div>`;
     }
 }
 
 function isCategoryMatch(tsvCategory, pageCategory) {
     if (!tsvCategory || !pageCategory) return true;
-
     const target = pageCategory.toUpperCase();
-    
-    if (target.includes('BALITA')) {
-        return tsvCategory === 'NEWS' || tsvCategory === 'BALITAAN' || tsvCategory === 'BALITA';
-    }
-    if (target.includes('OPINYO') || target.includes('OPINION')) {
-        return tsvCategory === 'OPINION' || tsvCategory === 'OPINYON';
-    }
-    if (target.includes('LATHALAIN') || target.includes('FEATURE')) {
-        return tsvCategory === 'FEATURE' || tsvCategory === 'LATHALAIN';
-    }
-    if (target.includes('AGHAM') || target.includes('AG-TEK') || target.includes('SCITECH')) {
-        return tsvCategory === 'AGHAM' || tsvCategory === 'AG-TEK' || tsvCategory === 'SCITECH';
-    }
-    if (target.includes('ISPORTS') || target.includes('SPORTS')) {
-        return tsvCategory === 'SPORTS' || tsvCategory === 'ISPORTS';
-    }
-
+    if (target.includes('BALITA')) return ['NEWS', 'BALITAAN', 'BALITA'].includes(tsvCategory);
+    if (target.includes('OPINYO') || target.includes('OPINION')) return ['OPINION', 'OPINYON'].includes(tsvCategory);
+    if (target.includes('LATHALAIN') || target.includes('FEATURE')) return ['FEATURE', 'LATHALAIN'].includes(tsvCategory);
+    if (target.includes('AGHAM') || target.includes('AG-TEK') || target.includes('SCITECH')) return ['AGHAM', 'AG-TEK', 'SCITECH'].includes(tsvCategory);
+    if (target.includes('ISPORTS') || target.includes('SPORTS')) return ['SPORTS', 'ISPORTS'].includes(tsvCategory);
     return tsvCategory === target;
 }
 
@@ -232,25 +278,20 @@ function renderCategoryPage(page) {
     categoryState.currentPage = page;
     const listContainer = document.getElementById('articles-list');
     const paginationContainer = document.getElementById('pagination-controls');
-
     if (!listContainer) return;
 
     if (categoryState.articles.length === 0) {
-        listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div><div class="state-description">Walang nakitang artikulo sa kategoryang ito.</div></div>`;
+        listContainer.innerHTML = `<div class="state-container"><div class="state-title">Walang Nakitang Artikulo</div></div>`;
         if (paginationContainer) paginationContainer.innerHTML = '';
         return;
     }
 
     const startIndex = (page - 1) * categoryState.perPage;
-    const endIndex = startIndex + categoryState.perPage;
-    const paginatedArticles = categoryState.articles.slice(startIndex, endIndex);
+    const paginatedArticles = categoryState.articles.slice(startIndex, startIndex + categoryState.perPage);
 
     let htmlContent = '';
     paginatedArticles.forEach(art => {
-        const imageHTML = art.image 
-            ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="compact-thumb">` 
-            : '';
-        
+        const imageHTML = art.image ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="compact-thumb">` : '';
         const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
 
         htmlContent += `
@@ -275,7 +316,6 @@ function renderCategoryPage(page) {
         if (categoryState.articles.length > categoryState.perPage) {
             const totalPages = Math.ceil(categoryState.articles.length / categoryState.perPage);
             let paginationHTML = '';
-            
             for (let p = 1; p <= totalPages; p++) {
                 paginationHTML += `<button class="page-btn ${p === categoryState.currentPage ? 'active' : ''}" onclick="renderCategoryPage(${p})">${p}</button>`;
             }
@@ -284,161 +324,50 @@ function renderCategoryPage(page) {
             paginationContainer.innerHTML = '';
         }
     }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (window.lucide) lucide.createIcons();
 }
 
 /* --------------------------------------------------------------------------
-   5. Page Controller: Author Profile
+   6. Patnugutan (Editorial Board) & About Page Handlers
    -------------------------------------------------------------------------- */
-async function initAuthorPage() {
-    const mainArea = document.getElementById('main-content-area');
-    if (!mainArea) return;
+function initPatnugutanPage() {
+    const container = document.getElementById('editorial-board-container');
+    if (!container) return;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const authorNameParam = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')).trim() : '';
-
-    if (!authorNameParam) {
-        mainArea.innerHTML = `
-            <div class="state-container">
-                <div class="state-title">Walang Tinukoy na May-Akda</div>
-                <div class="state-description">Ang pahinang ito ay nangangailangan ng structures na pangalan sa link.</div>
-            </div>
-        `;
-        return;
-    }
-
-    mainArea.innerHTML = `
-        <div class="page-header">
-            <span class="page-kicker">May-Akda / Manunulat</span>
-            <h1 id="author-name-heading">${escapeHtml(authorNameParam)}</h1>
-        </div>
-        <h2 class="section-title">Mga Inilathalang Akda</h2>
-        <div class="compact-list" id="author-articles-container">
-            <div class="state-container" style="margin-top: 0;">
-                <div class="state-title">Kinukuha ang mga ulat...</div>
-                <div class="state-description">Mangyaring maghintay habang hinahanap ang mga akda.</div>
-            </div>
+    container.innerHTML = `
+        <div class="state-container">
+            <div class="state-title">Lupong Patnugutan</div>
+            <div class="state-description">Ang opisyal na lupon ng mga mamamahayag ng Ang Arkanghel para sa Taong Panuruan 2025-2026.</div>
         </div>
     `;
+}
 
-    try {
-        const response = await fetch(CONFIG.ARTICLES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
+function initAboutPage() {
+    const container = document.getElementById('about-content');
+    if (!container) return;
 
-        const tsvText = await response.text();
-        const rows = tsvText.split('\n').map(row => row.split('\t'));
-
-        if (rows.length === 0) throw new Error('Walang laman ang TSV data.');
-
-        const headers = rows[0].map(h => h.trim().toUpperCase());
-        const dateIdx = headers.indexOf('DATE');
-        const titleIdx = headers.indexOf('HEADLINE/TITLE');
-        const leadIdx = headers.indexOf('LEAD SENTENCE');
-        const linkIdx = headers.indexOf('LINK');
-        const authorIdx = headers.indexOf('AUTHOR');
-
-        let rawArticles = [];
-        for (let i = 1; i < rows.length; i++) {
-            const cols = rows[i];
-            if (authorIdx !== -1 && cols[authorIdx]) {
-                if (cols[authorIdx].trim().toLowerCase() === authorNameParam.toLowerCase()) {
-                    rawArticles.push({
-                        date: formatDateToFilipino(cols[dateIdx] ? cols[dateIdx].trim() : ''),
-                        title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
-                        lead: cols[leadIdx] ? cols[leadIdx].trim() : '',
-                        link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
-                        author: authorNameParam,
-                        image: ''
-                    });
-                }
-            }
-        }
-
-        const container = document.getElementById('author-articles-container');
-        if (rawArticles.length > 0) {
-            const authorArticles = await Promise.all(rawArticles.map(async (art) => {
-                if (art.link && art.link !== '#') {
-                    const fetchedImg = await fetchArticleThumbnail(art.link);
-                    if (fetchedImg) art.image = fetchedImg;
-                }
-                return art;
-            }));
-
-            container.innerHTML = '';
-            authorArticles.forEach(art => {
-                const imageHTML = art.image 
-                    ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="compact-thumb">` 
-                    : '';
-                const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
-
-                const card = document.createElement('a');
-                card.href = art.link;
-                card.className = 'compact-card';
-                card.style.cssText = cardStyle;
-                card.innerHTML = `
-                    <div class="compact-info">
-                        <div class="compact-meta">
-                            <span>${escapeHtml(art.date)}</span>
-                        </div>
-                        <h2 class="compact-headline">${escapeHtml(art.title)}</h2>
-                        <p class="compact-excerpt">${escapeHtml(art.lead)}</p>
-                    </div>
-                    ${imageHTML}
-                `;
-                container.appendChild(card);
-            });
-        } else {
-            container.innerHTML = `
-                <div class="state-container" style="margin-top: 0;">
-                    <div class="state-title">Walang Nakitang Akda</div>
-                    <div class="state-description">Wala pang naitalang nailathalang ulat mula kay <strong>${escapeHtml(authorNameParam)}</strong>.</div>
-                </div>
-            `;
-        }
-
-    } catch (error) {
-        console.error("Error fetching author articles:", error);
-        const container = document.getElementById('author-articles-container');
-        if (container) {
-            container.innerHTML = `
-                <div class="state-container" style="margin-top: 0;">
-                    <div class="state-title">Nabigo sa Pagkonekta</div>
-                    <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos.</div>
-                </div>
-            `;
-        }
-    }
+    container.innerHTML = `
+        <div class="state-container">
+            <div class="state-title">Tungkol sa Ang Arkanghel</div>
+            <div class="state-description">Ang opisyal na pahayagang pampaaralan na naglalayong maghatid ng matapat at makabuluhang impormasyon sa pamayanan ng paaralan.</div>
+        </div>
+    `;
 }
 
 /* --------------------------------------------------------------------------
-   6. Page Controller: Archives / Silid-Aklatan
+   7. Archives Controller
    -------------------------------------------------------------------------- */
 let allArchivesList = [];
-const archivesPerPage = 4;
-let currentArchivePage = 1;
-
 async function initArchivesPage() {
     const container = document.getElementById('archives-container');
     if (!container) return;
 
     try {
         const response = await fetch(CONFIG.ARCHIVES_TSV);
-        if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Archives Google Sheets.');
-
+        if (!response.ok) return;
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
-
-        if (rows.length <= 1) {
-            container.innerHTML = `
-                <div class="state-container">
-                    <div class="state-title">Walang Nakitang Isyu</div>
-                    <div class="state-description">Wala pang nailagay na lumang isyu sa kasalukuyan.</div>
-                </div>
-            `;
-            return;
-        }
+        if (rows.length <= 1) return;
 
         allArchivesList = [];
         for (let i = 1; i < rows.length; i++) {
@@ -453,50 +382,27 @@ async function initArchivesPage() {
                 });
             }
         }
-
         renderArchivePage(1);
-
-    } catch (error) {
-        console.error("Error fetching archives:", error);
-        container.innerHTML = `
-            <div class="state-container">
-                <div class="state-title">Nabigo sa Pagkonekta</div>
-                <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos ng silid-aklatan.</div>
-            </div>
-        `;
+    } catch (e) {
+        console.error("Error fetching archives:", e);
     }
 }
 
 function renderArchivePage(page) {
-    currentArchivePage = page;
     const container = document.getElementById('archives-container');
-    const paginationContainer = document.getElementById('pagination-container');
+    if (!container || allArchivesList.length === 0) return;
 
-    if (!container) return;
-
-    if (!allArchivesList || allArchivesList.length === 0) {
-        container.innerHTML = `
-            <div class="state-container">
-                <div class="state-title">Walang Nakitang Arkibo</div>
-                <div class="state-description">Wala pang nailagay na lumang isyu.</div>
-            </div>
-        `;
-        if (paginationContainer) paginationContainer.innerHTML = '';
-        return;
-    }
-
-    const startIndex = (page - 1) * archivesPerPage;
-    const paginatedItems = allArchivesList.slice(startIndex, startIndex + archivesPerPage);
+    const startIndex = (page - 1) * 4;
+    const paginatedItems = allArchivesList.slice(startIndex, startIndex + 4);
 
     container.innerHTML = '';
     paginatedItems.forEach(item => {
-        const thumbPath = item.thumbnail.startsWith('assets/archive/') ? item.thumbnail : `assets/archive/${item.thumbnail}`;
         const card = document.createElement('a');
         card.href = item.link;
         card.className = 'archive-card';
         card.innerHTML = `
             <div class="archive-thumbnail-container">
-                <img src="${escapeHtml(thumbPath)}" alt="${escapeHtml(item.publication)} - ${escapeHtml(item.volume)}" class="archive-thumbnail" onerror="this.src='assets/arkanghel.png'">
+                <img src="${escapeHtml(item.thumbnail)}" alt="${escapeHtml(item.publication)}" class="archive-thumbnail" onerror="this.src='assets/arkanghel.png'">
             </div>
             <div class="archive-content">
                 <div>
@@ -504,40 +410,23 @@ function renderArchivePage(page) {
                     <div class="archive-volume">${escapeHtml(item.volume)}</div>
                     <div class="archive-period">${escapeHtml(item.period)}</div>
                 </div>
-                <div class="archive-action">
-                    <span>Tingnan ang Isyu</span> <i data-lucide="arrow-right" style="width:16px; height:16px;"></i>
-                </div>
+                <div class="archive-action">Tingnan ang Isyu &rarr;</div>
             </div>
         `;
         container.appendChild(card);
     });
-
-    if (paginationContainer) {
-        if (allArchivesList.length > archivesPerPage) {
-            const totalPages = Math.ceil(allArchivesList.length / archivesPerPage);
-            let paginationHTML = '';
-            
-            for (let p = 1; p <= totalPages; p++) {
-                paginationHTML += `<button class="page-btn ${p === currentArchivePage ? 'active' : ''}" onclick="renderArchivePage(${p})">${p}</button>`;
-            }
-            paginationContainer.innerHTML = paginationHTML;
-        } else {
-            paginationContainer.innerHTML = '';
-        }
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (window.lucide) lucide.createIcons();
 }
 
 /* --------------------------------------------------------------------------
-   7. Application Initializer
+   8. Application Initializer
    -------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
     setupGlobalNavigation();
     if (window.lucide) lucide.createIcons();
 
+    initHomePage();
     initCategoryPage();
-    initAuthorPage();
+    initPatnugutanPage();
+    initAboutPage();
     initArchivesPage();
 });
