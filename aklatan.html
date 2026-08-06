@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silid-Aklatan | Ang Arkanghel</title>
+    <!-- Opisyal na Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --maroon-dark: #4a000b;
+            --maroon-main: #6b0d18;
+            --maroon-accent: #800020;
+            --maroon-light: #a31c2b;
+            --maroon-soft: rgba(107, 13, 24, 0.04);
+            --bg: #f9f6f6;
+            --text: #1a1516;
+            --text-muted: #665c5e;
+            --card-bg: #ffffff;
+            --card-border: #ede4e5;
+            --nav-overlay: #ffffff;
+            --shadow-subtle: 0 4px 20px rgba(74, 0, 11, 0.02);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
+            --font-headline: 'Literata', serif;
+            --font-google-sans: 'Google Sans', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+        }
+
+        body.dark-mode { 
+            --bg: #0c0809; 
+            --text: #f4ecee; 
+            --text-muted: #a39698; 
+            --card-bg: #151012; 
+            --card-border: #261b1d;
+            --nav-overlay: #151012;
+            --maroon-soft: rgba(163, 28, 43, 0.12);
+            --shadow-subtle: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        * { box-sizing: border-box; }
+        html, body { max-width: 100vw; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-ui); margin: 0; display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
+        
+        /* Header Navigation Styles */
+        header { padding: 0.85rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+        .logo-container { display: flex; align-items: center; text-decoration: none; }
+        .logo-img { height: 32px; width: auto; object-fit: contain; }
+        
+        .header-controls { display: flex; gap: 16px; align-items: center; }
+        .desktop-nav-wrapper { position: relative; }
+        .desktop-nav { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .desktop-nav li { position: relative; }
+        .desktop-nav a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.88rem; transition: color 0.2s; display: flex; align-items: center; gap: 4px; font-family: var(--font-google-sans); }
+        .desktop-nav a:hover, .active-link { color: var(--maroon-light) !important; font-weight: 600; }
+        
+        .submenu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow-md); padding: 0.5rem 0; list-style: none; min-width: 180px; border-radius: 8px; z-index: 10; }
+        .submenu li { margin: 0; }
+        .submenu a { padding: 8px 16px; font-size: 0.85rem; }
+        .desktop-nav li:hover .submenu { display: block; }
+
+        .icon-btn { cursor: pointer; border: none; background: transparent; color: var(--text); padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .icon-btn:hover { background: var(--maroon-soft); color: var(--maroon-light); }
+
+        /* Mobile Drawer Navigation */
+        .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--card-border); box-shadow: -4px 0 25px rgba(0,0,0,0.2); z-index: 200; padding: 2rem 1.5rem; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+        .mobile-nav-panel.open { right: 0; }
+        .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
+        .mobile-nav-links li { margin-bottom: 1.2rem; }
+        .mobile-nav-links a { text-decoration: none; color: var(--text); font-size: 1.05rem; font-weight: 600; font-family: var(--font-google-sans); }
+        .mobile-menu-trigger { display: none; }
+
+        /* Main Content Layout */
+        main { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
+
+        /* Page Header */
+        .page-header { margin-bottom: 2.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--card-border); }
+        .page-kicker { font-family: var(--font-google-sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.4rem; display: block; }
+        .page-header h1 { font-family: var(--font-headline); font-size: 2.25rem; margin: 0 0 0.4rem 0; font-weight: 700; letter-spacing: -0.5px; }
+        .page-header p { font-family: var(--font-google-sans); color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+
+        /* Archives Grid & Big Cards */
+        .archives-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        .archive-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+        .archive-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--maroon-light); }
+        
+        .archive-thumbnail-container { width: 100%; height: 320px; background: var(--maroon-soft); overflow: hidden; border-bottom: 1px solid var(--card-border); position: relative; }
+        .archive-thumbnail { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.4s ease; }
+        .archive-card:hover .archive-thumbnail { transform: scale(1.02); }
+
+        .archive-content { padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+        .archive-publication { font-family: var(--font-headline); font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+        .archive-volume { font-family: var(--font-google-sans); font-size: 0.9rem; font-weight: 600; color: var(--maroon-light); margin-bottom: 0.3rem; }
+        .archive-period { font-family: var(--font-google-sans); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+        
+        .archive-action { font-family: var(--font-google-sans); font-size: 0.85rem; font-weight: 600; color: var(--maroon-light); display: flex; align-items: center; gap: 6px; padding-top: 1rem; border-top: 1px solid var(--card-border); margin-top: auto; }
+
+        /* Pagination Controls */
+        .pagination-container { display: flex; justify-content: center; gap: 8px; margin-top: 3rem; }
+        .page-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text); padding: 8px 14px; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: var(--font-google-sans); }
+        .page-btn:hover { border-color: var(--maroon-light); color: var(--maroon-light); }
+        .page-btn.active { background: var(--maroon-main); border-color: var(--maroon-main); color: #ffffff; }
+
+        /* State Container for Loading / Errors */
+        .state-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 4rem 2rem; text-align: center; box-shadow: var(--shadow-subtle); grid-column: span 2; }
+        .state-title { font-family: var(--font-headline); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+        .state-description { font-family: var(--font-google-sans); font-size: 0.92rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.5; }
+
+        /* Footer */
+        footer { text-align: center; padding: 3rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 5rem; background: var(--card-bg); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .desktop-nav-wrapper { display: none; }
+            .mobile-menu-trigger { display: flex; }
+            .archives-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 1.8rem; }
+            .archive-thumbnail-container { height: 260px; }
+            .state-container { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
+        </a>
+        
+        <div class="header-controls">
+            <div class="desktop-nav-wrapper">
+                <ul class="desktop-nav">
+                    <li>
+                        <a href="#">Mga Kategorya <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
+                        <ul class="submenu">
+                            <li><a href="balitaan.html">Balitaan</a></li>
+                            <li><a href="index.html#opinion">Opinyon</a></li>
+                            <li><a href="index.html#feature">Lathalain</a></li>
+                            <li><a href="index.html#scitech">Agham at Teknolohiya</a></li>
+                            <li><a href="index.html#sports">Isports</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
+                    <li><a href="archives.html" class="active-link">Silid-Aklatan</a></li>
+                    <li><a href="about.html">Tungkol sa Amin</a></li>
+                </ul>
+            </div>
+            
+            <button id="theme-toggle" class="icon-btn" aria-label="I-toggle ang Tema"><i data-lucide="sun" id="theme-icon"></i></button>
+            <button id="menu-toggle" class="icon-btn mobile-menu-trigger" aria-label="Buksan ang Menu"><i data-lucide="menu"></i></button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-nav-panel" id="mobile-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:'Literata', serif; font-weight:700; color:var(--maroon-light);">PAGLALAYAG</span>
+            <button id="menu-close" class="icon-btn"><i data-lucide="x"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="balitaan.html">Balitaan</a></li>
+            <li><a href="index.html#opinion">Opinyon</a></li>
+            <li><a href="index.html#feature">Lathalain</a></li>
+            <li><a href="index.html#scitech">Agham at Teknolohiya</a></li>
+            <li><a href="index.html#sports">Isports</a></li>
+            <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
+            <li><a href="archives.html">Silid-Aklatan</a></li>
+            <li><a href="about.html">Tungkol sa Amin</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Layout -->
+    <main>
+        <div class="page-header">
+            <h1>Silid-Aklatan</h1>
+            <p>Archive ng lahat ng opisyal na pahayagan at lathalain mula sa The Courier hanggang sa Ang Arkanghel.</p>
+        </div>
+
+        <div class="archives-grid" id="archives-container">
+            <div class="state-container">
+                <div class="state-title">Kinukuha ang mga arkibo...</div>
+                <div class="state-description">Mangyaring maghintay habang inilalagay namin ang mga nakaraang isyu ng pahayagan.</div>
+            </div>
+        </div>
+
+        <!-- Pagination Container -->
+        <div id="pagination-container" class="pagination-container"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.
+    </footer>
+
+    <!-- JavaScript para sa pag-fetch ng Archives TSV at Pagination (4 per page) -->
+    <script>
+        lucide.createIcons();
+
+        // Palitan ang URL na ito ng tamang TSV publish link para sa Archives sheet mo
+        const ARCHIVES_TSV_URL = 'PALITAN_NG_ARCHIVES_TSV_SHEET_URL_DITO';
+        
+        let allArchivesList = [];
+        const articlesPerPage = 4;
+        let currentPage = 1;
+
+        async function initArchivesPage() {
+            const container = document.getElementById('archives-container');
+
+            try {
+                // Pansamantalang fallback simulation habang wala pang nakalagay na totoong URL link o para sa demo
+                if (ARCHIVES_TSV_URL.includes('PALITAN_')) {
+                    allArchivesList = [
+                        { publication: "Ang Arkanghel", volume: "Tomo I - Bilang I", period: "Hunyo 2025 - Enero 2026", thumbnail: "arkanghel-vol1-no1.jpg", link: "article.html?id=arkanghel-vol1-1" },
+                        { publication: "The Courier", volume: "Volume IV - Release I", period: "June 2018 - March 2019", thumbnail: "courier-vol4-rel1.jpg", link: "article.html?id=courier-vol4-1" },
+                    ];
+                    renderPage(1);
+                    return;
+                }
+
+                const response = await fetch(ARCHIVES_TSV_URL);
+                if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Archives Google Sheets.');
+
+                const tsvText = await response.text();
+                const rows = tsvText.split('\n').map(row => row.split('\t'));
+
+                if (rows.length <= 1) {
+                    container.innerHTML = `
+                        <div class="state-container">
+                            <div class="state-title">Walang Nakitang Isyu</div>
+                            <div class="state-description">Wala pang nailalagay o naipapalabas na mga lumang isyu sa kasalukuyan.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                allArchivesList = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (cols.length >= 5 && cols[0].trim()) {
+                        allArchivesList.push({
+                            publication: cols[0].trim(),
+                            volume: cols[1].trim(),
+                            period: cols[2].trim(),
+                            thumbnail: cols[3].trim(),
+                            link: cols[4].trim()
+                        });
+                    }
+                }
+
+                renderPage(1);
+
+            } catch (error) {
+                console.error("Error fetching archives:", error);
+                container.innerHTML = `
+                    <div class="state-container">
+                        <div class="state-title">Nabigo sa Pagkonekta</div>
+                        <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos ng silid-aklatan. Mangyaring subukang muli mamaya.</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderPage(page) {
+            currentPage = page;
+            const container = document.getElementById('archives-container');
+            const paginationContainer = document.getElementById('pagination-container');
+
+            if (!allArchivesList || allArchivesList.length === 0) {
+                container.innerHTML = `
+                    <div class="state-container">
+                        <div class="state-title">Walang Nakitang Arkibo</div>
+                        <div class="state-description">Wala pang nailalagay na mga lumang isyu sa kasalukuyan.</div>
+                    </div>
+                `;
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            // Slice array para sa kasalukuyang pahina (4 na items bawat page)
+            const startIndex = (page - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
+            const paginatedItems = allArchivesList.slice(startIndex, endIndex);
+
+            container.innerHTML = '';
+            paginatedItems.forEach(item => {
+                const thumbPath = item.thumbnail.startsWith('assets/archive/') ? item.thumbnail : `assets/archive/${item.thumbnail}`;
+                const card = document.createElement('a');
+                card.href = item.link;
+                card.className = 'archive-card';
+                card.innerHTML = `
+                    <div class="archive-thumbnail-container">
+                        <img src="${escapeHtml(thumbPath)}" alt="${escapeHtml(item.publication)} - ${escapeHtml(item.volume)}" class="archive-thumbnail" onerror="this.src='assets/arkanghel.png'">
+                    </div>
+                    <div class="archive-content">
+                        <div>
+                            <div class="archive-publication">${escapeHtml(item.publication)}</div>
+                            <div class="archive-volume">${escapeHtml(item.volume)}</div>
+                            <div class="archive-period">${escapeHtml(item.period)}</div>
+                        </div>
+                        <div class="archive-action">
+                            <span>Tingnan ang Isyu</span> <i data-lucide="arrow-right" style="width:16px; height:16px;"></i>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Pamamahala ng Pagination Buttons (nakatakda sa threshold na mahigit sa 4 items bago lumitaw ang pagination)
+            if (allArchivesList.length > articlesPerPage) {
+                const totalPages = Math.ceil(allArchivesList.length / articlesPerPage);
+                let paginationHTML = '';
+                
+                for (let p = 1; p <= totalPages; p++) {
+                    paginationHTML += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="renderPage(${p})">${p}</button>`;
+                }
+                paginationContainer.innerHTML = paginationHTML;
+            } else {
+                paginationContainer.innerHTML = '';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        initArchivesPage();
+
+        // Theme Toggle & Mobile Menu Handlers
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme_preference');
+            const hour = new Date().getHours();
+            const isNight = hour >= 18 || hour < 6;
+
+            if (savedTheme === 'dark' || (!savedTheme && isNight)) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                icon.setAttribute('data-lucide', isDarkMode ? 'moon' : 'sun');
+                lucide.createIcons();
+            }
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme_preference', isDarkMode ? 'dark' : 'light');
+                updateThemeIcon();
+            });
+        }
+
+        initTheme();
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const mobilePanel = document.getElementById('mobile-panel');
+
+        if (menuToggle && mobilePanel) {
+            menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
+        }
+        if (menuClose && mobilePanel) {
+            menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+        }
+    </script>
+</body>
+</html>
