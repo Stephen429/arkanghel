@@ -126,7 +126,6 @@ header {
     font-weight: 600; 
 }
 
-/* Dropdown Submenu */
 .submenu { 
     display: none; 
     position: absolute; 
@@ -173,7 +172,6 @@ header {
     color: var(--maroon-light); 
 }
 
-/* Mobile Drawer Navigation */
 .mobile-nav-panel { 
     position: fixed; 
     top: 0; 
@@ -270,7 +268,6 @@ main {
     margin-left: 10px; 
 }
 
-/* Shared State Containers (Loading / Empty / Error) */
 .state-container { 
     background: var(--card-bg); 
     border: 1px solid var(--card-border); 
@@ -299,7 +296,7 @@ main {
 }
 
 /* --------------------------------------------------------------------------
-   4. Compact Article List Format (Category Pages & Author Profile)
+   4. Compact Article List Format
    -------------------------------------------------------------------------- */
 .compact-list { 
     display: flex; 
@@ -372,7 +369,6 @@ main {
     background: var(--bg); 
 }
 
-/* Shared Grid Layout for Homepage / Author */
 .articles-grid { 
     display: grid; 
     grid-template-columns: repeat(2, 1fr); 
@@ -528,7 +524,6 @@ main {
     margin-top: auto; 
 }
 
-/* Pagination Controls */
 .pagination-container { 
     display: flex; 
     justify-content: center; 
