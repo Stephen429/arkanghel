@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupon ng Patnugutan | Ang Arkanghel</title>
+    <!-- Opisyal na Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --maroon-dark: #4a000b;
+            --maroon-main: #6b0d18;
+            --maroon-accent: #800020;
+            --maroon-light: #a31c2b;
+            --maroon-soft: rgba(107, 13, 24, 0.04);
+            --bg: #f8f5f5;
+            --text: #1a1516;
+            --text-muted: #5c5052;
+            --card-bg: #ffffff;
+            --card-border: #e6dbdc;
+            --nav-overlay: #ffffff;
+            --shadow-subtle: 0 4px 20px rgba(74, 0, 11, 0.03);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+            --font-headline: 'Literata', serif;
+            --font-google-sans: 'Google Sans', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+        }
+
+        body.dark-mode { 
+            --bg: #0d0809; 
+            --text: #f5ecee; 
+            --text-muted: #b3a1a4; 
+            --card-bg: #161012; 
+            --card-border: #2c1d20;
+            --nav-overlay: #161012;
+            --maroon-soft: rgba(163, 28, 43, 0.15);
+            --shadow-subtle: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        * { box-sizing: border-box; }
+        html, body { max-width: 100vw; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-ui); margin: 0; display: flex; flex-direction: column; min-height: 100vh; line-height: 1.6; }
+        
+        /* Header Navigation Styles */
+        header { padding: 0.75rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 2px solid var(--maroon-main); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+        .logo-container { display: flex; align-items: center; text-decoration: none; }
+        .logo-img { height: 34px; width: auto; object-fit: contain; }
+        
+        .header-controls { display: flex; gap: 20px; align-items: center; }
+        .desktop-nav-wrapper { position: relative; }
+        .desktop-nav { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .desktop-nav li { position: relative; }
+        .desktop-nav a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.88rem; transition: color 0.2s; display: flex; align-items: center; gap: 4px; font-family: var(--font-google-sans); }
+        .desktop-nav a:hover, .active-link { color: var(--maroon-light) !important; font-weight: 600; }
+        
+        .submenu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow-md); padding: 0.5rem 0; list-style: none; min-width: 180px; border-radius: 8px; z-index: 10; }
+        .submenu li { margin: 0; }
+        .submenu a { padding: 8px 16px; font-size: 0.85rem; }
+        .desktop-nav li:hover .submenu { display: block; }
+
+        .icon-btn { cursor: pointer; border: none; background: transparent; color: var(--text); padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .icon-btn:hover { background: var(--maroon-soft); color: var(--maroon-light); }
+
+        /* Mobile Drawer Navigation */
+        .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--card-border); box-shadow: -4px 0 25px rgba(0,0,0,0.2); z-index: 200; padding: 2rem 1.5rem; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+        .mobile-nav-panel.open { right: 0; }
+        .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
+        .mobile-nav-links li { margin-bottom: 1.2rem; }
+        .mobile-nav-links a { text-decoration: none; color: var(--text); font-size: 1.05rem; font-weight: 600; font-family: var(--font-google-sans); }
+        .mobile-menu-trigger { display: none; }
+
+        /* Main Content Layout */
+        main { max-width: 960px; margin: 3rem auto; padding: 0 1.5rem; width: 100%; flex: 1; word-wrap: break-word; overflow-wrap: break-word; }
+
+        .page-title { font-family: var(--font-headline); font-size: 2.6rem; line-height: 1.2; font-weight: 700; margin-bottom: 0.5rem; }
+        .page-subtitle { font-family: var(--font-google-sans); color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem; }
+        .page-lead-divider { height: 2px; background: var(--maroon-main); margin-bottom: 2.5rem; border: none; }
+
+        /* Section Headings inside Editorial */
+        .editorial-section-title { font-family: var(--font-headline); font-size: 1.3rem; color: var(--text); margin: 3rem 0 1.2rem 0; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem; }
+
+        /* Staff Card Design */
+        .staff-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.5rem 1rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
+        .staff-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--maroon-light); }
+        
+        .staff-card.featured-eic { border-top: 4px solid var(--maroon-main); background: linear-gradient(to bottom, var(--maroon-soft), var(--card-bg)); max-width: 450px; margin: 0 auto; width: 100%; }
+
+        /* Square Image / Avatar Container Styling */
+        .avatar-container { width: 90px; height: 90px; border-radius: 12px; background: var(--maroon-soft); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-headline); font-weight: 700; font-size: 1.4rem; color: var(--maroon-light); margin-bottom: 0.8rem; overflow: hidden; }
+        .avatar-container.large { width: 110px; height: 110px; font-size: 1.8rem; }
+        .avatar-container.small { width: 75px; height: 75px; font-size: 1.1rem; border-radius: 10px; }
+        
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .staff-role { font-family: var(--font-google-sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.2rem; }
+        .staff-name { font-family: var(--font-headline); font-size: 1.05rem; font-weight: 700; color: var(--text); }
+
+        /* Custom Grids */
+        .grid-spa { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .grid-heads { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; }
+        .grid-categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+        .grid-creative { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+
+        /* Footer */
+        footer { text-align: center; padding: 3rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 5rem; background: var(--card-bg); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .desktop-nav-wrapper { display: none; }
+            .mobile-menu-trigger { display: flex; }
+            .grid-spa, .grid-heads, .grid-categories, .grid-creative { grid-template-columns: 1fr; }
+            .page-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img">
+        </a>
+        
+        <div class="header-controls">
+            <div class="desktop-nav-wrapper">
+                <ul class="desktop-nav">
+                    <li>
+                        <a href="#">Mga Kategorya <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
+                        <ul class="submenu">
+                            <li><a href="balitaan.html">Balitaan</a></li>
+                            <li><a href="index.html#opinion">Opinyon</a></li>
+                            <li><a href="index.html#feature">Lathalain</a></li>
+                            <li><a href="index.html#scitech">Agham at Teknolohiya</a></li>
+                            <li><a href="index.html#sports">Isports</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="editorial.html" class="active-link">Lupon ng Patnugutan</a></li>
+                    <li><a href="archives.html">Silid-Aklatan</a></li>
+                    <li><a href="about.html">Tungkol sa Amin</a></li>
+                </ul>
+            </div>
+            
+            <button id="theme-toggle" class="icon-btn" aria-label="I-toggle ang Tema"><i data-lucide="sun" id="theme-icon"></i></button>
+            <button id="menu-toggle" class="icon-btn mobile-menu-trigger" aria-label="Buksan ang Menu"><i data-lucide="menu"></i></button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-nav-panel" id="mobile-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:'Literata', serif; font-weight:700; color:var(--maroon-light);">PAGLALAYAG</span>
+            <button id="menu-close" class="icon-btn"><i data-lucide="x"></i></button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="balitaan.html">Balitaan</a></li>
+            <li><a href="index.html#opinion">Opinyon</a></li>
+            <li><a href="index.html#feature">Lathalain</a></li>
+            <li><a href="index.html#scitech">Agham at Teknolohiya</a></li>
+            <li><a href="index.html#sports">Isports</a></li>
+            <li><a href="editorial.html" style="color:var(--maroon-light);">Lupon ng Patnugutan</a></li>
+            <li><a href="archives.html">Silid-Aklatan</a></li>
+            <li><a href="about.html">Tungkol sa Amin</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Layout -->
+    <main>
+        <h1 class="page-title">Lupon ng Patnugutan</h1>
+        <p class="page-subtitle">Taong Panuruan 2026–2027</p>
+        <hr class="page-lead-divider">
+
+        <!-- 1. MGA TAGAPAYO NG PAARALAN (SPAs) -->
+        <h2 class="editorial-section-title"><i data-lucide="award" style="width:20px; height:20px; color:var(--maroon-light);"></i> School Paper Advisers</h2>
+        <div class="grid-spa">
+            <div class="staff-card" data-key="School Paper Adviser (English)">
+                <div class="avatar-container">ENG</div>
+                <div class="staff-role">School Paper Adviser (English)</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="School Paper Adviser (Filipino)">
+                <div class="avatar-container">FIL</div>
+                <div class="staff-role">School Paper Adviser (Filipino)</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+        </div>
+
+        <!-- 2. MGA PANGUNAHING PATNUGOT (HEAD EDITORS) -->
+        <h2 class="editorial-section-title"><i data-lucide="crown" style="width:20px; height:20px; color:var(--maroon-light);"></i> Head Editors</h2>
+        
+        <!-- Editor-in-Chief (Centered Top) -->
+        <div class="staff-card featured-eic" data-key="Editor-in-Chief">
+            <div class="avatar-container large">EIC</div>
+            <div class="staff-role">Editor-in-Chief</div>
+            <div class="staff-name">Naglo-load...</div>
+        </div>
+
+        <!-- Assistant EIC & Managing Editor Grid -->
+        <div class="grid-heads">
+            <div class="staff-card" data-key="Assistant Editor-in-Chief">
+                <div class="avatar-container">AEIC</div>
+                <div class="staff-role">Assistant Editor-in-Chief</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Managing Editor">
+                <div class="avatar-container">ME</div>
+                <div class="staff-role">Managing Editor</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+        </div>
+
+        <!-- 3. MGA PATNUGOT NG KATEGORYA -->
+        <h2 class="editorial-section-title"><i data-lucide="layers" style="width:20px; height:20px; color:var(--maroon-light);"></i> Category Editors</h2>
+        <div class="grid-categories">
+            <div class="staff-card" data-key="News Editor">
+                <div class="avatar-container small">BAL</div>
+                <div class="staff-role">Balitaan</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Opinion Editor">
+                <div class="avatar-container small">OPI</div>
+                <div class="staff-role">Opinyon</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Feature Editor">
+                <div class="avatar-container small">LAT</div>
+                <div class="staff-role">Lathalain</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Science and Technology Editor">
+                <div class="avatar-container small">SCI</div>
+                <div class="staff-role">Agham at Teknolohiya</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Sports Editor">
+                <div class="avatar-container small">ISP</div>
+                <div class="staff-role">Isports</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+        </div>
+
+        <!-- 4. KAWANING KREATIBO AT TEKNIKAL -->
+        <h2 class="editorial-section-title"><i data-lucide="palette" style="width:20px; height:20px; color:var(--maroon-light);"></i> Creative Heads</h2>
+        <div class="grid-creative">
+            <div class="staff-card" data-key="Head Photojournalist">
+                <div class="avatar-container small">PJ</div>
+                <div class="staff-role">Head Photojournalist</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Head Layout Artist">
+                <div class="avatar-container small">LAY</div>
+                <div class="staff-role">Head Layout Artist</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Head Cartoonist">
+                <div class="avatar-container small">CAR</div>
+                <div class="staff-role">Head Cartoonist</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+            <div class="staff-card" data-key="Head Copywriter">
+                <div class="avatar-container small">COPY</div>
+                <div class="staff-role">Head Copywriter</div>
+                <div class="staff-name">Naglo-load...</div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 Ang Arkanghel Publication. Lahat ng karapatan ay nakalaan.
+    </footer>
+
+    <!-- JavaScript para sa Google Sheets TSV Fetcher at Dynamic Position/Name -->
+    <script>
+        lucide.createIcons();
+
+        // Palitan ang URL na ito ng iyong tunay na Google Sheets Published TSV URL
+        const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ.../pub?output=tsv';
+
+        async function fetchEditorialStaff() {
+            try {
+                const response = await fetch(SHEET_TSV_URL);
+                if (!response.ok) throw new Error('Cannot Read Data.');
+                
+                const tsvText = await response.text();
+                const rows = tsvText.split('\n').map(row => row.split('\t'));
+                
+                const staffData = {};
+                // Binabasa ang bawat row mula sa Sheets (Col 0: Name, Col 1: Position, Col 2: Photo Link)
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (cols.length >= 3) {
+                        const name = cols[0].trim();
+                        const sheetPosition = cols[1].trim();
+                        const photoLink = cols[2].trim();
+                        
+                        // I-normalize ang position para maging maluwag sa spacing/capitalization
+                        const cleanKey = sheetPosition.toLowerCase();
+                        staffData[cleanKey] = { name, sheetPosition, photoLink };
+                    }
+                }
+
+                // I-aplay ang nakuha mula sa Sheets sa mga naka-angkop na HTML cards
+                document.querySelectorAll('.staff-card').forEach(card => {
+                    const key = card.getAttribute('data-key').toLowerCase();
+                    const nameEl = card.querySelector('.staff-name');
+                    const roleEl = card.querySelector('.staff-role');
+                    const avatarContainer = card.querySelector('.avatar-container');
+
+                    if (staffData[key]) {
+                        const { name, sheetPosition, photoLink } = staffData[key];
+                        
+                        // Kung ano ang isinulat sa Sheets para sa position, iyon ang direktang ipapakita sa badge!
+                        roleEl.textContent = sheetPosition;
+                        nameEl.textContent = name;
+
+                        if (photoLink) {
+                            avatarContainer.innerHTML = `<img src="assets/staff/${photoLink}" alt="${name}">`;
+                        }
+                    } else {
+                        nameEl.textContent = 'Bakante';
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error loading editorial data:", error);
+                document.querySelectorAll('.staff-name').forEach(el => {
+                    if (el.textContent === 'Loading...') {
+                        el.textContent = 'Error Loading Data';
+                    }
+                });
+            }
+        }
+
+        fetchEditorialStaff();
+
+        // Theme Toggle & Mobile Menu Handlers
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme_preference');
+            const hour = new Date().getHours();
+            const isNight = hour >= 18 || hour < 6;
+
+            if (savedTheme === 'dark' || (!savedTheme && isNight)) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                icon.setAttribute('data-lucide', isDarkMode ? 'moon' : 'sun');
+                lucide.createIcons();
+            }
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode 
