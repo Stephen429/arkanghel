@@ -563,12 +563,12 @@ function renderCategoryPage(page) {
         const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
 
         htmlContent += `
-            <a href="${escapeHtml(art.link)}" class="compact-card" style="${cardStyle}">
+            <a href="${escapeHtml(art.link)}" class="compact-art-card" style="${cardStyle}">
                 <div class="compact-info">
                     <div class="compact-meta">
                         <span>${escapeHtml(art.date)}</span>
                         <span>•</span>
-                        <span>Mula kay ${escapeHtml(art.author)}</span>
+                        <span>Ulat ni ${escapeHtml(art.author)}</span>
                     </div>
                     <h2 class="compact-headline">${escapeHtml(art.title)}</h2>
                     <p class="compact-excerpt">${escapeHtml(art.lead)}</p>
