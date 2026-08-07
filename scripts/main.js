@@ -3,7 +3,7 @@
 // ==========================================================================
 
 /* --------------------------------------------------------------------------
-   1. Data Sources & Configuration
+   1. Configuration & Global State
    -------------------------------------------------------------------------- */
 const CONFIG = {
     ARTICLES_TSV: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv',
@@ -11,7 +11,7 @@ const CONFIG = {
 };
 
 /* --------------------------------------------------------------------------
-   2. Common Utilities
+   2. Helper Utilities
    -------------------------------------------------------------------------- */
 function escapeHtml(str) {
     if (!str) return '';
@@ -71,7 +71,7 @@ async function fetchArticleThumbnail(articleUrl) {
 }
 
 /* --------------------------------------------------------------------------
-   3. Global Navigation & Theme
+   3. Theme & Navigation Handlers
    -------------------------------------------------------------------------- */
 function initTheme() {
     const savedTheme = localStorage.getItem('theme_preference');
@@ -116,6 +116,16 @@ function setupGlobalNavigation() {
     if (menuClose && mobilePanel) {
         menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
     }
+
+    // Dynamic active-link highlighter based on file URL
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.desktop-nav a, .mobile-nav-links a');
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath) {
+            link.classList.add('active-link');
+        }
+    });
 
     initTheme();
 }
@@ -171,7 +181,6 @@ async function initHomePage() {
                 return;
             }
 
-            // Display top 2 recent articles per section on homepage
             const topArticles = categoryArticles.slice(0, 2);
             let html = '';
             topArticles.forEach(art => {
@@ -328,36 +337,100 @@ function renderCategoryPage(page) {
 }
 
 /* --------------------------------------------------------------------------
-   6. Patnugutan (Editorial Board) & About Page Handlers
+   6. Writer Profile Controller (manunulat.html)
    -------------------------------------------------------------------------- */
-function initPatnugutanPage() {
-    const container = document.getElementById('editorial-board-container');
-    if (!container) return;
+function initAuthorPage() {
+    const authorMainArea = document.getElementById('main-content-area');
+    if (!authorMainArea || !window.location.pathname.includes('manunulat.html')) return;
 
-    container.innerHTML = `
-        <div class="state-container">
-            <div class="state-title">Lupong Patnugutan</div>
-            <div class="state-description">Ang opisyal na lupon ng mga mamamahayag ng Ang Arkanghel para sa Taong Panuruan 2025-2026.</div>
-        </div>
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorQuery = urlParams.get('author') || 'tristan';
+
+    const authorDatabase = {
+        'tristan': {
+            name: 'Tristan Lhoyd Tabligan',
+            role: 'Punong Patnugot',
+            bio: 'Mag-aaral na mamamahayag at editorial writer mula sa Lydia D. Villangca Trade School. Punong Patnugot ng Ang Arkanghel para sa Taong Panuruan 2026–2027.',
+            articles: [
+                { 
+                    title: 'Project GLASS: Ang Hamon ng Transparansya sa SSLG 2026', 
+                    category: 'Opinyon', 
+                    date: 'Mayo 10, 2026', 
+                    readTime: '4 min read',
+                    link: '#'
+                },
+                { 
+                    title: '11th Moving-Up Ceremony ng LDVTS, Matagumpay na Naisagawa', 
+                    category: 'Balita', 
+                    date: 'Abril 28, 2026', 
+                    readTime: '3 min read',
+                    link: '#'
+                }
+            ]
+        },
+        'gift': {
+            name: 'Gift O. Amparo',
+            role: 'Protocol Officer / Contributor',
+            bio: 'Kasapi ng Lupon ng Patnugutan at opisyal ng SSLG na nag-aambag ng mga ulat at artikulo ukol sa pamumuno at kaganapan sa paaralan.',
+            articles: [
+                { 
+                    title: 'Pagtataguyod ng Disiplina at Pananagutan sa Pamayang Pangkampus', 
+                    category: 'Lathalain', 
+                    date: 'Abril 15, 2026', 
+                    readTime: '5 min read',
+                    link: '#'
+                }
+            ]
+        }
+    };
+
+    const authorData = authorDatabase[authorQuery] || authorDatabase['tristan'];
+    const initials = authorData.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .substring(0, 2);
+
+    authorMainArea.innerHTML = `
+        <section class="author-header-card">
+            <div class="author-avatar">${initials.toUpperCase()}</div>
+            <div class="author-info">
+                <span class="author-role-badge">${escapeHtml(authorData.role)}</span>
+                <h1 class="author-name">${escapeHtml(authorData.name)}</h1>
+                <p class="author-bio">${escapeHtml(authorData.bio)}</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="author-articles-heading">
+                <i data-lucide="pen-tool" style="color:var(--maroon-light); width:20px; height:20px;"></i>
+                Mga Inilathalang Akda
+            </h2>
+            <div class="articles-grid">
+                ${authorData.articles.map(art => `
+                    <a href="${escapeHtml(art.link)}" class="article-card">
+                        <div>
+                            <div class="article-category">${escapeHtml(art.category)}</div>
+                            <h3 class="article-title">${escapeHtml(art.title)}</h3>
+                        </div>
+                        <div class="article-meta">
+                            <span>${escapeHtml(art.date)}</span>
+                            <span class="article-read-text">${escapeHtml(art.readTime)}</span>
+                        </div>
+                    </a>
+                `).join('')}
+            </div>
+        </section>
     `;
-}
 
-function initAboutPage() {
-    const container = document.getElementById('about-content');
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="state-container">
-            <div class="state-title">Tungkol sa Ang Arkanghel</div>
-            <div class="state-description">Ang opisyal na pahayagang pampaaralan na naglalayong maghatid ng matapat at makabuluhang impormasyon sa pamayanan ng paaralan.</div>
-        </div>
-    `;
+    if (window.lucide) lucide.createIcons();
 }
 
 /* --------------------------------------------------------------------------
-   7. Archives Controller
+   7. Archives Controller (aklatan.html)
    -------------------------------------------------------------------------- */
 let allArchivesList = [];
+
 async function initArchivesPage() {
     const container = document.getElementById('archives-container');
     if (!container) return;
@@ -418,7 +491,7 @@ function renderArchivePage(page) {
 }
 
 /* --------------------------------------------------------------------------
-   8. Application Initializer
+   8. Application Initialization Lifecycle
    -------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
     setupGlobalNavigation();
@@ -426,7 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initHomePage();
     initCategoryPage();
-    initPatnugutanPage();
-    initAboutPage();
+    initAuthorPage();
     initArchivesPage();
 });
