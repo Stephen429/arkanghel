@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boses ng Lydians, nangibabaw sa SSLG Elections 2026 | Ang Arkanghel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        main { max-width: 860px; margin: 3rem auto; padding: 0 1.5rem; word-wrap: break-word; overflow-wrap: break-word; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); margin-bottom: 1.5rem; flex-wrap: wrap; font-family: var(--font-google-sans); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .article-title { font-family: var(--font-headline); font-size: 2.6rem; line-height: 1.2; font-weight: 700; margin-bottom: 20px; word-break: break-word; }
+        .byline-container { display: flex; flex-direction: column; gap: 4px; padding: 14px 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); margin-bottom: 28px; font-family: var(--font-google-sans); }
+        .byline-author { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+        .byline-author a { color: var(--maroon-main); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+        .byline-author a:hover { color: var(--maroon-light); text-decoration: underline; }
+        .byline-date { font-size: 0.8rem; color: var(--text-muted); }
+        .article-image-box { margin: 0 0 32px 0; width: 100%; text-align: center; }
+        .article-image-box img { width: 100%; max-height: 520px; object-fit: cover; border-radius: 8px; border: 1px solid var(--card-border); display: block; }
+        .image-caption { font-size: 0.82rem; color: var(--text-muted); font-style: italic; margin-top: 10px; text-align: left; font-family: var(--font-google-sans); line-height: 1.4; padding: 0 4px; border-left: 2px solid var(--maroon-main); }
+        .article-body { font-family: var(--font-google-sans); font-size: 1.05rem; line-height: 1.75; }
+        .article-body p { margin-bottom: 1.5rem; text-align: left; word-break: break-word; }
+        .article-body p:first-of-type::first-letter {
+            font-family: var(--font-headline);
+            font-size: 4em;
+            line-height: 0.65;
+            float: left;
+            margin-right: 5px;
+            margin-top: 5px;
+            margin-bottom: -2px;
+            font-weight: 1000;
+            color: var(--maroon-main);
+        }
+        footer { text-align: center; padding: 3rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 5rem; background: var(--card-bg); }
+        @media (max-width: 1024px) {
+            .desktop-nav-wrapper { display: none; }
+            .mobile-menu-trigger { display: flex; }
+            .article-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="index.html"><img src="../assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img"></a>
+    <div class="header-controls">
+        <div class="desktop-nav-wrapper">
+            <ul class="desktop-nav">
+                <li>
+                    <a href="#" class="active-link">Mga Kategorya <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
+                    <ul class="submenu">
+                        <li><a href="balitaan.html">Balitaan</a></li>
+                        <li><a href="opinyon.html">Opinyon</a></li>
+                        <li><a href="lathalain.html">Lathalain</a></li>
+                        <li><a href="agham.html">Ag-Tek</a></li>
+                        <li><a href="isports.html">Isports</a></li>
+                    </ul>
+                </li>
+                <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
+                <li><a href="archives.html">Silid-Aklatan</a></li>
+                <li><a href="about.html">Tungkol sa Amin</a></li>
+            </ul>
+        </div>
+        <button id="theme-toggle" class="icon-btn" aria-label="I-toggle ang Tema"><i data-lucide="sun" id="theme-icon"></i></button>
+        <button id="menu-toggle" class="icon-btn mobile-menu-trigger" aria-label="Buksan ang Menu"><i data-lucide="menu"></i></button>
+    </div>
+</header>
+
+<div class="mobile-nav-panel" id="mobile-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:'Literata', serif; font-weight:700; color:var(--maroon-light);">PAGLALAYAG</span>
+        <button id="menu-close" class="icon-btn"><i data-lucide="x"></i></button>
+    </div>
+    <ul class="mobile-nav-links">
+        <li><a href="balitaan.html">Balitaan</a></li>
+        <li><a href="opinyon.html">Opinyon</a></li>
+        <li><a href="lathalain.html">Lathalain</a></li>
+        <li><a href="agham.html">Ag-Tek</a></li>
+        <li><a href="isports.html">Isports</a></li>
+        <li><a href="editorial.html">Lupon ng Patnugutan</a></li>
+        <li><a href="archives.html">Silid-Aklatan</a></li>
+        <li><a href="about.html">Tungkol sa Amin</a></li>
+    </ul>
+</div>
+
+<main>
+    <nav class="breadcrumb">
+        <a href="index.html">HOME</a> <span class="separator">/</span>
+        <a href="balitaan.html">BALITAAN</a> <span class="separator">/</span>
+        <span style="color:var(--text-muted); font-weight:500;">Boses ng Lydians, nangibabaw sa SSLG Elections 2026</span>
+    </nav>
+    <h1 class="article-title">Boses ng Lydians, nangibabaw sa SSLG Elections 2026</h1>
+    <div class="byline-container">
+        <div class="byline-author">
+            <a href="javascript:void(0)" onclick="initAuthorPage('Qins Gonzales')">Qins Gonzales</a>
+        </div>
+        <div class="byline-date">Pebrero 13, 2026</div>
+    </div>
+    
+    <div class="article-body">
+        <p>Nagpamalas ng aktibong pakikilahok sa demokratikong proseso ang mga mag-aaral ng Lydia D. Villangca Trade School sa ginanap na SSLG Election 2026 noong Pebrero 13, kung saan nagharap ang dalawang partidong DISISAIS at BIGKIS matapos ang isang linggong pangangampanya at pagpapakilala ng kanilang mga plataporma.</p><p>Sa araw ng botohan, nagtipon ang mga Lydians upang gamitin ang kanilang karapatang bumoto at piliin <br>ang mga kandidatong sa tingin nila ay may kakayahang mamuno at magsilbi sa Supreme Student Learner Government para sa Taong Panuruan 2026-2027.</p><p>Matapos ang maayos na pagbibilang ng mga boto, agad ding inanunsyo sa parehong araw ang opisyal na resulta ng halalan na nagdulot ng pananabik at kasiyahan sa buong komunidad ng paaralan.</p><p>Nanguna sa mga nahalal si Lorraine Banania bilang pangulo ng SSLG, habang si James Paul Sabanal <br>naman ang nahalal bilang pangalawang pangulo.</p><p>Nahalal din sina Tristan Lhoyd Tabligan bilang kalihim, Warren Josh Elizalde bilang ingat-yaman, at Aaliyah Kate Enrile bilang tagasuri. Para naman sa posisyon ng <br>tagapagbalita o Public Information Officer, nanalo si John Adrian Mananghaya, habang si Gift Amparo ang nahalal bilang Protocol Officer.</p><p>Samantala, ang mga nahalal na kinatawan ng bawat baitang ay sina Aneliah Shanti Mehmi at Mark <br>Philip Etac bilang mga kinatawan ng Grade 12, Frances Yzabel Herrera at Edlyn Faye Breis bilang mga kinatawan ng Grade 11, Akiro Del Rosario at Rianna Bañarez bilang <br>mga kinatawan ng Grade 10, Erika Mae Castillo at Ayezza Viola bilang mga kinatawan ng Grade 9, at <br>Kheilla Domingo at Mary Elizabeth Bernabe bilang mga kinatawan ng Grade 8.</p><p>Sa pagtatapos ng halalan, muling ipinakita ng mga Lydians ang kahalagahan ng pagkakaisa at <br>responsableng pagboto sa pagpili ng mga lider na magsisilbing boses ng mga mag-aaral. Inaasahan na <br>ang mga bagong halal na opisyal ay magsisilbing huwaran ng integridad, pananagutan, at pagiging bukas <br>sa kanilang pamumuno para sa kapakanan ng buong komunidad ng Lydia.</p>
+    </div>
+</main>
+
+<footer>
+    &copy; Ang Arkanghel <br> <em>Lilipad. Maghahayag.</em> <br>All Rights Reserved 2026.
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>
