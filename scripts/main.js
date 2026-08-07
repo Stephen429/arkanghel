@@ -270,32 +270,39 @@ function renderCategoryFeeds(articles) {
         let items = categorized[feedId] || [];
         items = items.slice(0, MAX_ARTICLES_PER_CATEGORY);
         const container = document.getElementById(feedId);
-        
-        if (container && items.length > 0) {
-            items.forEach((item, index) => {
-                const card = document.createElement('a');
-                card.href = item.link;
+            
+            if (container && items.length > 0) {
+                items.forEach((item, index) => {
+                    if (index === 0) {
+                        // Large Featured Card Layout
+                        const card = document.createElement('a');
+                        card.href = item.link;
+                        card.className = 'featured-card';
+                        
+                        const imgHTML = item.image 
+                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                            : `<i data-lucide="image" style="width:36px;height:36px; color:var(--text-muted);"></i>`;
 
-                if (index === 0) {
-                    card.className = 'featured-card';
-                    const imgHTML = item.image 
-                        ? `<img src="${item.image}" alt="${escapeHtml(item.headline)}" style="width:100%; height:100%; object-fit:cover;">`
-                        : `<i data-lucide="image" style="width:36px;height:36px; color:var(--text-muted);"></i>`;
-
-                    card.innerHTML = `
-                        <div class="featured-img-container">${imgHTML}</div>
-                        <div>
-                            <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
-                                <span>${item.displayType}</span>
-                                ${item.dateFormatted ? `• <span>${item.dateFormatted}</span>` : ''}
+                        card.innerHTML = `
+                            <div class="featured-img-container">
+                                ${imgHTML}
                             </div>
-                            <h3>${escapeHtml(item.headline)}</h3>
-                            <p>${escapeHtml(item.lead)}</p>
-                            <span class="author-tag">Ulat ni ${escapeHtml(item.author)}</span>
-                        </div>
-                    `;
-                } else {
-                    card.className = 'compact-card';
+                            <div>
+                                <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
+                                    <span>${item.displayType}</span>
+                                    ${item.dateFormatted ? `• <span>${item.dateFormatted}</span>` : ''}
+                                </div>
+                                <h3>${item.headline}</h3>
+                                <p>${item.lead}</p>
+                                <span class="author-tag">Akda ni ${item.author}</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    } else {
+                        // Compact Card Layout
+                        const card = document.createElement('a');
+                        card.href = item.link;
+                        card.className = 'compact-card';
 
                         const imgHTML = item.image 
                             ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
@@ -308,13 +315,13 @@ function renderCategoryFeeds(articles) {
                             <div>
                                 <h3>${item.headline}</h3>
                                 <p>${item.lead}</p>
-                                <span class="author-tag">Ulat ni ${item.author}</span>
+                                <span class="author-tag">Akda ni ${item.author}</span>
                             </div>
                         `;
-                }
-                container.appendChild(card);
-            });
-        }
+                        container.appendChild(card);
+                    }
+                });
+            }
     });
     
     if (window.lucide) lucide.createIcons();
