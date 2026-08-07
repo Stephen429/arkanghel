@@ -422,6 +422,7 @@ function renderPage(page) {
 }
 window.renderPage = renderPage;
 
+// --- 🏷️ CATEGORY PAGES ENGINE ---
 let categoryState = {
     articles: [],
     currentPage: 1,
@@ -440,7 +441,7 @@ async function initCategoryPage() {
     categoryState.targetCategory = detectedTitle;
 
     try {
-        const response = await fetch(CONFIG.ARTICLES_TSV);
+        const response = await fetch(ARTICLES_TSV_URL);
         if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
 
         const tsvText = await response.text();
@@ -470,7 +471,7 @@ async function initCategoryPage() {
                     const rawDate = cols[dateIdx] ? cols[dateIdx].trim() : '';
                     rawArticles.push({
                         type: typeVal,
-                        date: formatDateToFilipino(rawDate),
+                        date: formatFilipinoDate(rawDate),
                         title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
                         lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng artikulong ito.',
                         link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
@@ -503,7 +504,7 @@ async function initCategoryPage() {
 }
 
 function isCategoryMatch(tsvCategory, pageCategory) {
-    if (!tsvCategory || !pageCategory) return true; // Default fallback
+    if (!tsvCategory || !pageCategory) return true;
 
     const target = pageCategory.toUpperCase();
     
@@ -568,6 +569,7 @@ function renderCategoryPage(page) {
     });
 
     listContainer.innerHTML = htmlContent;
+}
     
 // --- 👥 EDITORIAL STAFF PAGE ENGINE ---
 async function fetchEditorialStaff() {
