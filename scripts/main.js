@@ -691,13 +691,13 @@ async function initAuthorPage() {
             `;
 
             try {
-                const response = await fetch(TSV_SHEET_URL);
-                if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
+                const response = await fetch(ARTICLES_TSV_URL);
+                if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
 
                 const tsvText = await response.text();
                 const rows = tsvText.split('\n').map(row => row.split('\t'));
 
-                if (rows.length === 0) throw new Error('Walang laman ang TSV data.');
+                if (rows.length === 0) throw new Error('Walang laman ang data.');
 
                 // Pagkuha ng mga column index (Column 1 = index 0 para sa Category, Column 5 = index 4 para sa Link/Slug, atbp.)
                 const colsHeader = rows[0].map(h => h.trim().toLowerCase());
@@ -760,7 +760,7 @@ async function initAuthorPage() {
                     container.innerHTML = `
                         <div class="state-container" style="grid-column: span 2; margin-top: 0;">
                             <div class="state-title">Nabigo sa Pagkonekta</div>
-                            <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos mula sa database. Mangyaring subukang muli mamaya.</div>
+                            <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos. Mangyaring subukang muli mamaya.</div>
                         </div>
                     `;
                 }
