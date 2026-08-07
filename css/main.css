@@ -49,12 +49,114 @@
         .icon-btn { cursor: pointer; border: none; background: transparent; color: var(--text); padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
         .icon-btn:hover { background: var(--maroon-soft); color: var(--maroon-light); }
 
-        /* Mobile Drawer Navigation */
-        .mobile-nav-panel { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: var(--nav-overlay); border-left: 1px solid var(--card-border); box-shadow: -4px 0 25px rgba(0,0,0,0.2); z-index: 200; padding: 2rem 1.5rem; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
-        .mobile-nav-panel.open { right: 0; }
-        .mobile-nav-links { list-style: none; padding: 0; margin: 2rem 0 0 0; }
-        .mobile-nav-links li { margin-bottom: 1.2rem; }
-        .mobile-nav-links a { text-decoration: none; color: var(--text); font-size: 1.05rem; font-weight: 600; }
+                /* --- MOBILE DRAWER NAVIGATION (FIXED) --- */
+        /* Semi-transparent backdrop overlay over main page content */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-nav-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Isolated slide-out panel */
+        .mobile-nav-panel { 
+            position: fixed; 
+            top: 0; 
+            right: -100%; 
+            width: 300px; 
+            max-width: 85vw;
+            height: 100vh; 
+            background: var(--card-bg); /* Solid background to prevent content bleed-through */
+            border-left: 1px solid var(--card-border); 
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3); 
+            z-index: 999; /* Higher priority than all sticky headers and main content */
+            padding: 2rem 1.5rem; 
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), right 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav-panel.open { 
+            right: 0; 
+        }
+
+        /* Mobile Header Controls Inside Drawer */
+        .mobile-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-header .logo-img {
+            height: 28px;
+        }
+
+        /* Navigation List & Links */
+        .mobile-nav-links { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-links li { 
+            margin: 0; 
+            width: 100%;
+        }
+
+        .mobile-nav-links a { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-size: 1rem; 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active-link {
+            background: var(--maroon-soft);
+            color: var(--maroon-light);
+        }
+
+        /* Nested Mobile Submenu */
+        .mobile-nav-links .mobile-submenu {
+            list-style: none;
+            padding-left: 1.25rem;
+            margin-top: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .mobile-nav-links .mobile-submenu a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-muted);
+        }
 
         /* Carousel Wrapper & Loading / Fade Transition Styles */
         .carousel-wrapper { width: 100%; position: relative; margin-bottom: 3rem; min-height: 500px; background: #080304; }
