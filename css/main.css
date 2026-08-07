@@ -367,7 +367,7 @@
         @media (max-width: 768px) {
             .desktop-nav-wrapper { display: none; }
             .mobile-menu-trigger { display: flex; }
-            .compact-card { grid-template-columns: 1fr; }
+            .compact-art-card { grid-template-columns: 1fr; }
             .compact-thumb { width: 100%; height: 160px; order: -1; }
             .category-title { font-size: 1.8rem; }
         }
