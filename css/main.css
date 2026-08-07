@@ -1,17 +1,16 @@
 /* ==========================================================================
    Ang Arkanghel - Master Stylesheet (main.css)
-   Consolidated & Complete UI Component Library
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Core Theme Variables & Resets
+   1. Core Variables & Resets
    -------------------------------------------------------------------------- */
 :root {
     --maroon-dark: #4a000b;
     --maroon-main: #6b0d18;
     --maroon-accent: #800020;
     --maroon-light: #a31c2b;
-    --maroon-soft: rgba(107, 13, 24, 0.04);
+    --maroon-soft: rgba(107, 13, 24, 0.05);
     
     --bg: #f8f5f5;
     --text: #1a1516;
@@ -28,9 +27,6 @@
     --font-headline: 'Literata', serif;
     --font-google-sans: 'Google Sans', sans-serif;
     --font-ui: 'Inter', sans-serif;
-
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
 }
 
 body.dark-mode { 
@@ -42,21 +38,13 @@ body.dark-mode {
     --nav-overlay: #161012;
     --maroon-soft: rgba(163, 28, 43, 0.15);
     --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 5px 18px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.6);
 }
 
 *, *::before, *::after { 
     box-sizing: border-box; 
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
+    margin: 0; 
+    padding: 0; 
 }
 
 html, body { 
@@ -71,24 +59,18 @@ body {
     display: flex; 
     flex-direction: column; 
     min-height: 100vh; 
-    line-height: 1.6; 
-    transition: background-color 0.25s ease, color 0.25s ease;
+    line-height: 1.65; 
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-img {
-    display: block;
-    max-width: 100%;
+a { 
+    color: inherit; 
+    text-decoration: none; 
 }
 
 /* --------------------------------------------------------------------------
-   2. Header & Global Navigation
+   2. Header & Navigation Structure
    -------------------------------------------------------------------------- */
-header { 
+header, .site-header { 
     padding: 0.75rem 5%; 
     display: flex; 
     justify-content: space-between; 
@@ -99,39 +81,17 @@ header {
     top: 0; 
     z-index: 1000; 
     backdrop-filter: blur(8px); 
-    -webkit-backdrop-filter: blur(8px);
 }
 
 .logo-container { 
     display: flex; 
     align-items: center; 
-    gap: 0.75rem;
-    text-decoration: none; 
 }
 
 .logo-img { 
     height: 34px; 
     width: auto; 
     object-fit: contain; 
-}
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
-}
-
-.logo-title {
-    font-family: var(--font-headline);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.logo-subtitle {
-    font-family: var(--font-google-sans);
-    font-size: 0.72rem;
-    color: var(--text-muted);
 }
 
 .header-controls { 
@@ -148,8 +108,6 @@ header {
     display: flex; 
     gap: 22px; 
     list-style: none; 
-    margin: 0; 
-    padding: 0; 
     align-items: center; 
 }
 
@@ -158,19 +116,17 @@ header {
 }
 
 .desktop-nav a { 
-    text-decoration: none; 
     color: var(--text); 
     font-weight: 500; 
     font-size: 0.88rem; 
-    transition: color 0.2s; 
     display: flex; 
     align-items: center; 
     gap: 4px; 
     font-family: var(--font-google-sans); 
+    transition: color 0.2s ease;
 }
 
-.desktop-nav a:hover, 
-.active-link { 
+.desktop-nav a:hover, .active-link { 
     color: var(--maroon-light) !important; 
     font-weight: 600; 
 }
@@ -190,28 +146,22 @@ header {
     z-index: 10; 
 }
 
-.submenu li { 
-    margin: 0; 
-}
-
 .submenu a { 
     padding: 8px 16px; 
     font-size: 0.85rem; 
+    display: block; 
 }
 
 .desktop-nav li:hover .submenu { 
     display: block; 
 }
 
-/* Icon Buttons & Triggers */
 .icon-btn { 
     cursor: pointer; 
     border: none; 
     background: transparent; 
     color: var(--text); 
     padding: 6px; 
-    width: 38px;
-    height: 38px;
     border-radius: 50%; 
     display: flex; 
     align-items: center; 
@@ -240,7 +190,7 @@ header {
     z-index: 2000; 
     padding: 2rem 1.5rem; 
     transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
 .mobile-nav-panel.open { 
@@ -249,8 +199,7 @@ header {
 
 .mobile-nav-links { 
     list-style: none; 
-    padding: 0; 
-    margin: 2rem 0 0 0; 
+    margin-top: 2rem; 
 }
 
 .mobile-nav-links li { 
@@ -258,101 +207,18 @@ header {
 }
 
 .mobile-nav-links a { 
-    text-decoration: none; 
-    color: var(--text); 
     font-size: 1.05rem; 
     font-weight: 600; 
     font-family: var(--font-google-sans); 
 }
 
 /* --------------------------------------------------------------------------
-   3. Universal Buttons Library (Fixed Hidden Buttons Issue)
+   3. Main Container & Headers
    -------------------------------------------------------------------------- */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    font-family: var(--font-google-sans);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-}
-
-.btn:active {
-    transform: scale(0.97);
-}
-
-.btn-primary {
-    background: var(--maroon-main);
-    color: #ffffff !important;
-}
-
-.btn-primary:hover {
-    background: var(--maroon-light);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-outline {
-    background: transparent;
-    color: var(--maroon-light);
-    border-color: var(--maroon-light);
-}
-
-.btn-outline:hover {
-    background: var(--maroon-soft);
-}
-
-.btn-ghost {
-    background: transparent;
-    color: var(--text);
-}
-
-.btn-ghost:hover {
-    background: var(--maroon-soft);
-    color: var(--maroon-light);
-}
-
-.btn-block {
-    width: 100%;
-}
-
-.page-btn { 
-    background: var(--card-bg); 
-    border: 1px solid var(--card-border); 
-    color: var(--text); 
-    padding: 8px 14px; 
-    font-size: 0.85rem; 
-    font-weight: 600; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    transition: all 0.2s; 
-    font-family: var(--font-google-sans); 
-}
-
-.page-btn:hover { 
-    border-color: var(--maroon-main); 
-    color: var(--maroon-light); 
-}
-
-.page-btn.active { 
-    background: var(--maroon-main); 
-    border-color: var(--maroon-main); 
-    color: #ffffff; 
-}
-
-/* --------------------------------------------------------------------------
-   4. Main Layout Containers & Core Headers
-   -------------------------------------------------------------------------- */
-main { 
-    max-width: 1080px; 
+main, #main-content-area, .main-container { 
+    max-width: 1000px; 
     margin: 0 auto; 
-    padding: 3rem 1.5rem; 
+    padding: 2.5rem 1.5rem 4rem; 
     width: 100%; 
     flex: 1; 
 }
@@ -376,35 +242,11 @@ main {
 
 .category-title, .page-header h1 { 
     font-family: var(--font-headline); 
-    font-size: clamp(2rem, 4vw, 2.6rem); 
+    font-size: 2.4rem; 
     font-weight: 700; 
     color: var(--text); 
     margin: 0; 
     line-height: 1.2;
-}
-
-.page-subtitle {
-    font-family: var(--font-google-sans);
-    font-size: 1rem;
-    color: var(--text-muted);
-    margin-top: 0.4rem;
-}
-
-.section-title { 
-    font-family: var(--font-headline); 
-    font-size: 1.25rem; 
-    margin: 2rem 0 1rem 0; 
-    font-weight: 700; 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-}
-
-.section-title::after { 
-    content: ''; 
-    flex: 1; 
-    height: 1px; 
-    background: var(--card-border); 
 }
 
 .state-container { 
@@ -435,71 +277,8 @@ main {
 }
 
 /* --------------------------------------------------------------------------
-   5. General Cards & Article Layouts
+   4. Articles, Grids & Compact Views
    -------------------------------------------------------------------------- */
-.articles-grid { 
-    display: grid; 
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 1.25rem; 
-}
-
-.article-card { 
-    background: var(--card-bg); 
-    border: 1px solid var(--card-border); 
-    border-radius: 8px; 
-    padding: 1.25rem; 
-    box-shadow: var(--shadow-subtle); 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
-    text-decoration: none; 
-    color: inherit; 
-}
-
-.article-card:hover { 
-    transform: translateY(-2px); 
-    box-shadow: var(--shadow-md); 
-    border-color: var(--maroon-light); 
-}
-
-.article-card .article-category { 
-    font-family: var(--font-google-sans); 
-    font-size: 0.68rem; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    color: var(--maroon-light); 
-    font-weight: 700; 
-    margin-bottom: 0.4rem; 
-}
-
-.article-card .article-title { 
-    font-family: var(--font-headline); 
-    font-size: 1.05rem; 
-    font-weight: 700; 
-    margin-bottom: 0.8rem; 
-    line-height: 1.35; 
-}
-
-.article-card .article-meta { 
-    font-family: var(--font-google-sans); 
-    font-size: 0.76rem; 
-    color: var(--text-muted); 
-    padding-top: 0.75rem; 
-    border-top: 1px solid var(--card-border); 
-    margin-top: auto; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    font-weight: 500; 
-}
-
-.article-read-text { 
-    color: var(--maroon-light); 
-    font-weight: 600; 
-}
-
-/* Compact Article Format */
 .compact-list { 
     display: flex; 
     flex-direction: column; 
@@ -571,144 +350,177 @@ main {
     background: var(--bg); 
 }
 
+.articles-grid, .category-preview-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1.25rem; 
+}
+
+.article-card { 
+    background: var(--card-bg); 
+    border: 1px solid var(--card-border); 
+    border-radius: 8px; 
+    padding: 1.25rem; 
+    box-shadow: var(--shadow-subtle); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.article-card:hover { 
+    transform: translateY(-2px); 
+    box-shadow: var(--shadow-md); 
+    border-color: var(--maroon-light); 
+}
+
+.article-category { 
+    font-family: var(--font-google-sans); 
+    font-size: 0.68rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: var(--maroon-light); 
+    font-weight: 700; 
+    margin-bottom: 0.4rem; 
+}
+
+.article-title { 
+    font-family: var(--font-headline); 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    margin-bottom: 0.8rem; 
+    line-height: 1.35; 
+}
+
+.article-meta { 
+    font-family: var(--font-google-sans); 
+    font-size: 0.76rem; 
+    color: var(--text-muted); 
+    padding-top: 0.75rem; 
+    border-top: 1px solid var(--card-border); 
+    margin-top: auto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    font-weight: 500; 
+}
+
+.article-read-text { 
+    color: var(--maroon-light); 
+    font-weight: 600; 
+}
+
 /* --------------------------------------------------------------------------
-   6. Editorial Board Page Components (Patnugutan CSS)
+   5. Author Profiles (manunulat.html) & Content Cards
    -------------------------------------------------------------------------- */
-.editorial-section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 2.5rem 0 1.25rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--card-border);
-    font-family: var(--font-headline);
-    font-size: 1.3rem;
-    color: var(--text);
-}
-
-.staff-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.2rem;
-    margin-bottom: 2rem;
-}
-
-.staff-card {
+.author-header-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    box-shadow: var(--shadow-subtle);
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.staff-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--maroon-light);
-    box-shadow: var(--shadow-md);
-}
-
-.avatar-container {
-    width: 88px;
-    height: 88px;
-    margin: 0 auto 0.9rem;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--maroon-soft);
-    border: 2px solid var(--card-border);
+    padding: 2.2rem;
     display: flex;
-    justify-content: center;
+    gap: 2rem;
     align-items: center;
-    color: var(--maroon-light);
+    box-shadow: var(--shadow-subtle);
+    margin-bottom: 2.5rem;
+}
+
+.author-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--maroon-soft);
+    border: 3px solid var(--maroon-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-headline);
+    font-size: 1.8rem;
     font-weight: 700;
-    font-size: 1.2rem;
+    color: var(--maroon-main);
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
-.avatar-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.staff-role {
-    margin-bottom: 0.3rem;
+body.dark-mode .author-avatar {
     color: var(--maroon-light);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    border-color: var(--maroon-light);
+}
+
+.author-info { flex: 1; }
+
+.author-role-badge {
+    display: inline-block;
+    background: var(--maroon-soft);
+    color: var(--maroon-light);
     font-family: var(--font-google-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
 }
 
-.staff-name {
+.author-name {
     font-family: var(--font-headline);
-    font-size: 1.05rem;
+    font-size: 1.85rem;
     font-weight: 700;
     color: var(--text);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
 }
 
-/* --------------------------------------------------------------------------
-   7. About Us Page Components (Tungkol CSS & Callouts)
-   -------------------------------------------------------------------------- */
+.author-bio {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.author-articles-heading {
+    font-family: var(--font-headline);
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--maroon-main);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .content-box {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 2rem;
+    margin-bottom: 2rem;
     box-shadow: var(--shadow-subtle);
-    margin-bottom: 1.75rem;
 }
 
 .content-box h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.35rem;
     font-family: var(--font-headline);
+    font-size: 1.4rem;
+    color: var(--maroon-main);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed var(--card-border);
 }
 
-.content-box p {
-    font-family: var(--font-google-sans);
-    font-size: 0.98rem;
-    line-height: 1.8;
-    color: var(--text-muted);
-}
+body.dark-mode .content-box h2 { color: var(--maroon-light); }
 
-/* Highlight / Callout Containers */
-.callout,
-.vm-item,
-.law-callout {
-    margin-top: 1.25rem;
+.callout-box {
     background: var(--maroon-soft);
     border-left: 4px solid var(--maroon-main);
-    border-radius: 0 10px 10px 0;
-    padding: 1.25rem 1.5rem;
-}
-
-.callout h4,
-.vm-item h4,
-.law-callout h4 {
-    margin: 0 0 0.45rem;
-    font-family: var(--font-google-sans);
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--maroon-light);
-}
-
-.callout p,
-.vm-item p,
-.law-callout p {
-    margin: 0;
-    color: var(--text);
-    font-size: 0.95rem;
-    line-height: 1.7;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.4rem;
+    margin-top: 1.25rem;
 }
 
 /* --------------------------------------------------------------------------
-   8. Archives Page Components (Silid-Aklatan)
+   6. Archives Page (Silid-Aklatan)
    -------------------------------------------------------------------------- */
 .archives-grid { 
     display: grid; 
@@ -741,7 +553,6 @@ main {
     background: var(--maroon-soft); 
     overflow: hidden; 
     border-bottom: 1px solid var(--card-border); 
-    position: relative; 
 }
 
 .archive-thumbnail { 
@@ -752,9 +563,7 @@ main {
     transition: transform 0.4s ease; 
 }
 
-.archive-card:hover .archive-thumbnail { 
-    transform: scale(1.02); 
-}
+.archive-card:hover .archive-thumbnail { transform: scale(1.02); }
 
 .archive-content { 
     padding: 1.75rem; 
@@ -808,12 +617,34 @@ main {
     margin-top: 3.5rem; 
 }
 
-/* --------------------------------------------------------------------------
-   9. Homepage Extras & Quick Links
-   -------------------------------------------------------------------------- */
-.homepage-section {
-    margin-bottom: 2.5rem;
+.page-btn { 
+    background: var(--card-bg); 
+    border: 1px solid var(--card-border); 
+    color: var(--text); 
+    padding: 8px 14px; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    font-family: var(--font-google-sans); 
 }
+
+.page-btn:hover { 
+    border-color: var(--maroon-main); 
+    color: var(--maroon-light); 
+}
+
+.page-btn.active { 
+    background: var(--maroon-main); 
+    border-color: var(--maroon-main); 
+    color: #ffffff; 
+}
+
+/* --------------------------------------------------------------------------
+   7. Homepage Section Headers & Footer
+   -------------------------------------------------------------------------- */
+.homepage-section { margin-bottom: 2.5rem; }
 
 .section-header {
     display: flex;
@@ -824,11 +655,7 @@ main {
     padding-bottom: 0.5rem;
 }
 
-.section-title-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+.section-title-group { display: flex; align-items: center; gap: 0.5rem; }
 
 .section-title-group h2 {
     font-family: var(--font-headline);
@@ -843,52 +670,16 @@ main {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--maroon-light);
-    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: color 0.2s ease;
 }
 
-.see-all-link:hover {
-    color: var(--maroon-dark);
-    text-decoration: underline;
-}
+.see-all-link:hover { color: var(--maroon-dark); text-decoration: underline; }
 
-.quick-links-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.quick-link-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 600;
-    font-family: var(--font-google-sans);
-    transition: all 0.2s ease;
-}
-
-.quick-link-card:hover {
-    border-color: var(--maroon-light);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-subtle);
-}
-
-/* --------------------------------------------------------------------------
-   10. Footer & Global Responsive Queries
-   -------------------------------------------------------------------------- */
 footer { 
     text-align: center; 
-    padding: 2.5rem 1.5rem; 
+    padding: 2.5rem 1rem; 
     font-size: 0.82rem; 
     color: var(--text-muted); 
     border-top: 1px solid var(--card-border); 
@@ -897,31 +688,16 @@ footer {
     font-family: var(--font-google-sans);
 }
 
-@media (max-width: 900px) {
-    .staff-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+footer em { color: var(--maroon-light); font-style: normal; font-weight: 600; }
 
 @media (max-width: 768px) {
     .desktop-nav-wrapper { display: none; }
     .mobile-menu-trigger { display: flex; }
-    
     .compact-card { grid-template-columns: 1fr; }
     .compact-thumb { width: 100%; height: 160px; order: -1; }
-    
     .category-title { font-size: 1.8rem; }
-    .articles-grid { grid-template-columns: 1fr; }
-    .archives-grid { grid-template-columns: 1fr; }
-    
+    .articles-grid, .category-preview-grid, .archives-grid { grid-template-columns: 1fr; }
     .archive-thumbnail-container { height: 260px; }
-    
-    .staff-grid { grid-template-columns: 1fr; }
-    .content-box { padding: 1.25rem; }
-}
-
-@media (max-width: 480px) {
-    .btn {
-        width: 100%;
-    }
-}
+    .author-header-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1.25rem; }
+   }
+   
