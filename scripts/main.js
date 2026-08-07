@@ -489,19 +489,59 @@ async function fetchEditorialStaff() {
                         ${col0}
                     </h2>
                 `;
-            } else {
+                        } else {
                 if (!gridWrapperOpen) {
                     htmlContent += `<div class="staff-grid">`;
                     gridWrapperOpen = true;
                 }
 
-                let avatarContent = col1 ? col1.substring(0, 3).toUpperCase() : 'STAFF';
-                if (col2) {
-                    avatarContent = `<img src="assets/staff/${col2}" alt="${col0}">`;
-                }
+                const name = col0;
+                const position = col1;
+                const photoUrl = col2;
+
+                const avatarHTML = photoUrl 
+                    ? `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(name)}">`
+                    : name.charAt(0).toUpperCase();
 
                 htmlContent += `
                     <div class="staff-card">
-                        <div class="avatar-container">${avatarContent}</div>
-                        <div class="staff-role">${col1}</div>
-          }
+                        <div class="avatar-container">
+                            ${avatarHTML}
+                        </div>
+                        <h3 class="staff-name">${escapeHtml(name)}</h3>
+                        <p class="staff-position">${escapeHtml(position)}</p>
+                    </div>
+                `;
+            }
+        }
+
+        if (gridWrapperOpen) {
+            htmlContent += `</div>`;
+        }
+
+        container.innerHTML = htmlContent;
+        lucide.createIcons();
+
+    } catch (err) {
+        console.error("Failed to load editorial staff:", err);
+        container.innerHTML = `
+            <div class="state-container">
+                <div class="state-title">Hindi Ma-load ang Talaan ng Patnugutan</div>
+                <div class="state-description">Nagkaroon ng problema sa pagkuha ng datos mula sa Google Sheets.</div>
+            </div>
+        `;
+    }
+}
+
+// Utility Helper for HTML Escaping
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+fetchEditorialStaff();
