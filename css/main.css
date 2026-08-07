@@ -165,7 +165,7 @@
         .util-btn:hover { border-color: var(--maroon-light); color: var(--maroon-light); transform: translateY(-2px); }
 
         footer { text-align: center; padding: 3rem 1rem; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 3rem; background: var(--card-bg); }
-        
+
         .desktop-nav-wrapper { display: block; }
         .mobile-menu-trigger { display: none; }
 
