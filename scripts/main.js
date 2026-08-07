@@ -271,57 +271,60 @@ function renderCategoryFeeds(articles) {
         items = items.slice(0, MAX_ARTICLES_PER_CATEGORY);
         const container = document.getElementById(feedId);
             
-            if (container && items.length > 0) {
-                items.forEach((item, index) => {
-                    if (index === 0) {
-                        // Large Featured Card Layout
-                        const card = document.createElement('a');
-                        card.href = item.link;
-                        card.className = 'featured-card';
-                        
-                        const imgHTML = item.image 
-                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
-                            : `<i data-lucide="image" style="width:36px;height:36px; color:var(--text-muted);"></i>`;
+        if (container && items.length > 0) {
+            items.forEach((item, index) => {
+                // I-check kung may valid na image path/URL
+                const hasImage = item.image && item.image.trim() !== '';
 
-                        card.innerHTML = `
-                            <div class="featured-img-container">
-                                ${imgHTML}
-                            </div>
-                            <div>
-                                <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
-                                    <span>${item.displayType}</span>
-                                    ${item.dateFormatted ? `• <span>${item.dateFormatted}</span>` : ''}
-                                </div>
-                                <h3>${item.headline}</h3>
-                                <p>${item.lead}</p>
-                                <span class="author-tag">Akda ni ${item.author}</span>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    } else {
-                        // Compact Card Layout
-                        const card = document.createElement('a');
-                        card.href = item.link;
-                        card.className = 'compact-card';
+                if (index === 0) {
+                    // Large Featured Card Layout
+                    const card = document.createElement('a');
+                    card.href = item.link;
+                    card.className = 'featured-card';
+                    
+                    const imgHTML = hasImage 
+                        ? `<div class="featured-img-container">
+                            <img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">
+                           </div>`
+                        : '';
 
-                        const imgHTML = item.image 
-                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
-                            : `<i data-lucide="file-text" style="width:24px;height:24px; color:var(--text-muted);"></i>`;
+                    card.innerHTML = `
+                        ${imgHTML}
+                        <div>
+                            <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
+                                <span>${item.displayType}</span>
+                                ${item.dateFormatted ? `• <span>${item.dateFormatted}</span>` : ''}
+                            </div>
+                            <h3>${item.headline}</h3>
+                            <p>${item.lead}</p>
+                            <span class="author-tag">Akda ni ${item.author}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                } else {
+                    // Compact Card Layout
+                    const card = document.createElement('a');
+                    card.href = item.link;
+                    card.className = 'compact-card';
 
-                        card.innerHTML = `
-                            <div class="compact-img-container">
-                                ${imgHTML}
-                            </div>
-                            <div>
-                                <h3>${item.headline}</h3>
-                                <p>${item.lead}</p>
-                                <span class="author-tag">Akda ni ${item.author}</span>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    }
-                });
-            }
+                    const imgHTML = hasImage 
+                        ? `<div class="compact-img-container">
+                            <img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">
+                           </div>`
+                        : '';
+
+                    card.innerHTML = `
+                        ${imgHTML}
+                        <div>
+                            <h3>${item.headline}</h3>
+                            <p>${item.lead}</p>
+                            <span class="author-tag">Akda ni ${item.author}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
     });
     
     if (window.lucide) lucide.createIcons();
