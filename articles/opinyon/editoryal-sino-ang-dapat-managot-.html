@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[EDITORYAL] Sino ang dapat managot? | Ang Arkanghel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../../css/main.css">
+    <style>
+        main { max-width: 860px; margin: 3rem auto; padding: 0 1.5rem; word-wrap: break-word; overflow-wrap: break-word; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); margin-bottom: 1.5rem; flex-wrap: wrap; font-family: var(--font-google-sans); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .article-title { font-family: var(--font-headline); font-size: 2.6rem; line-height: 1.2; font-weight: 700; margin-bottom: 20px; word-break: break-word; }
+        .byline-container { display: flex; flex-direction: column; gap: 4px; padding: 14px 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); margin-bottom: 28px; font-family: var(--font-google-sans); }
+        .byline-author { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+        .byline-author a { color: var(--maroon-main); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+        .byline-author a:hover { color: var(--maroon-light); text-decoration: underline; }
+        .byline-date { font-size: 0.8rem; color: var(--text-muted); }
+        .article-image-box { margin: 0 0 32px 0; width: 100%; text-align: center; }
+        .article-image-box img { width: 100%; max-height: 520px; object-fit: cover; border-radius: 8px; border: 1px solid var(--card-border); display: block; }
+        .image-caption { font-size: 0.82rem; color: var(--text-muted); font-style: italic; margin-top: 10px; text-align: left; font-family: var(--font-google-sans); line-height: 1.4; padding: 0 4px; border-left: 2px solid var(--maroon-main); }
+        .article-body { font-family: var(--font-google-sans); font-size: 1.05rem; line-height: 1.75; }
+        .article-body p { margin-bottom: 1.5rem; text-align: left; word-break: break-word; }
+        .article-body p:first-of-type::first-letter {
+            font-family: var(--headline-font);
+            font-size: 4em;
+            line-height: 0.65;
+            float: left;
+            margin-right: 5px;
+            margin-top: 5px;
+            margin-bottom: -2px;
+            font-weight: 1000;
+            color: var(--maroon-main);
+        }
+        footer { text-align: center; padding: 3rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 5rem; background: var(--card-bg); }
+        @media (max-width: 1024px) {
+            .desktop-nav-wrapper { display: none; }
+            .mobile-menu-trigger { display: flex; }
+            .article-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="../../index.html"><img src="../../assets/arkanghel.png" alt="Ang Arkanghel" class="logo-img"></a>
+    <div class="header-controls">
+        <div class="desktop-nav-wrapper">
+            <ul class="desktop-nav">
+                <li>
+                    <a href="#" class="active-link">Mga Kategorya <i data-lucide="chevron-down" style="width:14px; height:14px;"></i></a>
+                    <ul class="submenu">
+                        <li><a href="../../balitaan.html">Balitaan</a></li>
+                        <li><a href="../../opinyon.html">Opinyon</a></li>
+                        <li><a href="../../lathalain.html">Lathalain</a></li>
+                        <li><a href="../../agham.html">Ag-Tek</a></li>
+                        <li><a href="../../isports.html">Isports</a></li>
+                    </ul>
+                </li>
+                <li><a href="../../patnugutan.html">Lupon ng Patnugutan</a></li>
+                <li><a href="../../aklatan.html">Silid-Aklatan</a></li>
+                <li><a href="../../tungkol.html">Tungkol sa Amin</a></li>
+            </ul>
+        </div>
+        <button id="theme-toggle" class="icon-btn" aria-label="I-toggle ang Tema"><i data-lucide="sun" id="theme-icon"></i></button>
+        <button id="menu-toggle" class="icon-btn mobile-menu-trigger" aria-label="Buksan ang Menu"><i data-lucide="menu"></i></button>
+    </div>
+</header>
+
+<div class="mobile-nav-panel" id="mobile-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:'Literata', serif; font-weight:700; color:var(--maroon-light);">Ang Arkanghel</span>
+        <button id="menu-close" class="icon-btn"><i data-lucide="x"></i></button>
+    </div>
+    <ul class="mobile-nav-links">
+        <li><a href="../../balitaan.html">Balitaan</a></li>
+        <li><a href="../../opinyon.html">Opinyon</a></li>
+        <li><a href="../../lathalain.html">Lathalain</a></li>
+        <li><a href="../../agham.html">Ag-Tek</a></li>
+        <li><a href="../../isports.html">Isports</a></li>
+        <li><a href="../../patnugutan.html">Lupon ng Patnugutan</a></li>
+        <li><a href="../../aklatan.html">Silid-Aklatan</a></li>
+        <li><a href="../../tungkol.html">Tungkol sa Amin</a></li>
+    </ul>
+</div>
+
+<main>
+    <nav class="breadcrumb">
+        <a href="../../index.html">HOME</a> <span class="separator">/</span>
+        <a href="../../opinyon.html">OPINYON</a> <span class="separator">/</span>
+        <span style="color:var(--text-muted); font-weight:500;">[EDITORYAL] Sino ang dapat managot?</span>
+    </nav>
+    <h1 class="article-title">[EDITORYAL] Sino ang dapat managot?</h1>
+    <div class="byline-container">
+        <div class="byline-author">
+            <a href="../../manunulat.html?name=Juan+Dela+Cruz">Juan Dela Cruz</a>
+        </div>
+        <div class="byline-date">Agosto 7, 2026</div>
+    </div>
+    
+    <div class="article-body">
+        <p>Sa gitna ng usapin tungkol sa ghost flood control project sa Pandi, Bulacan, naging sentro ng diskusyon ang pansamantalang pag­laya ni dating Sen. Bong Revilla matapos payagan ng korte na magpiyansa.</p><p>Sa paliwanag ng korte, hindi pa sapat ang ebidensiya laban kay Revilla. May malinaw na batayan sa batas ang ganitong proseso, ang sinumang akusado, kahit pa dating ma­taas na opisyal, ay may karapatan sa due pro­cess at sa pansamantalang kalayaan habang nililitis ang kaso.</p><p>Pero hindi rin ibig sabihin nito na dapat tumigil ang publiko sa pagtatanong.</p><p>Kapag ang kasong pinag-uusapan ay may kinalaman sa umano’y P92.8-milyong ghost project, alleged kickbacks, at pondong para sana sa flood control, natural lang na mangu­westiyon ang taumbayan.</p><p>Lalo pa’t ang mga co-accused na dating­ opisyal ng DPWH ay hindi pinayagang maka­pagpiyansa, habang si Revilla ay pansamantalang nakalaya matapos magpiyansa ng P1 milyon.</p><p>Legal man ang paliwanag, mabigat pa rin ang dating nito sa publiko: bakit tila may pag­kakaiba ang pagtrato sa mga akusado depende sa kani­lang posisyon?</p><p>Mas lumalim pa ang tanong dahil sa dissent ni Justice Karl Miranda, na nagsabing hindi dapat tingnan nang hiwa-hiwalay ang mga ale­gasyon.</p><p>Para sa kanya, kailangang ilagay ang mga ito sa konteksto ng umano’y “kalakaran” sa DPWH, kung saan ang advance kickbacks ay maaaring mabawi kalaunan mula sa pondo ng publiko.</p><p>Ang mahalagang tanong ay kung sino ang nakinabang at kung paano nauwi sa gastos ng gobyerno ang buong operasyon.</p><p>May isa pang hindi dapat malimutan: ang mahigit P124 milyon na, ayon sa Ombudsman, hindi pa rin naibabalik ni Revilla mula sa kan­yang naunang pork barrel case.</p><p>Kung may desisyon nang may civil liability­, bakit taon ang lumipas at wala pa ring mali­naw na pagbabalik ng pera sa kaban ng bayan?</p><p>Kaya dapat magpatuloy ang kaso, pabilisin­ ang paglilitis, patibayin ang ebidensiya, at higit sa lahat, sagutin ang tanong ng bayan: nasaan ang pera, sino ang nakinabang, at ka­ilan ma­na­­nagot ang dapat managot?</p><p>Pera ng taumbayan ang nawaldas at nara­rapat lamang na maibalik ito sa tamang kinalalagyan para pakinabangan nang nakararami.</p>
+    </div>
+</main>
+
+<footer>
+    &copy; Ang Arkanghel <br> <em>Lilipad. Maghahayag.</em> <br>All Rights Reserved 2026.
+</footer>
+
+<script src="../../scripts/main.js"></script>
+</body>
+</html>
