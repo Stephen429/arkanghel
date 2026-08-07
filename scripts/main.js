@@ -721,7 +721,7 @@ async function initAuthorPage() {
                             authorArticles.push({
                                 category: cols[categoryIdx] ? cols[categoryIdx].trim() : 'Pangkalahatan',
                                 title: titleIdx !== -1 && cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
-                                date: dateIdx !== -1 && cols[dateIdx] ? formatDateToFilipino(cols[dateIdx]) : '',
+                                date: dateIdx !== -1 && cols[dateIdx] ? formatFilipinoDate(cols[dateIdx]) : '',
                                 link: cols[slugIdx] ? cols[slugIdx].trim() : '#'
                             });
                         }
