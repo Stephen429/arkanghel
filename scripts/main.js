@@ -499,9 +499,123 @@ async function fetchEditorialStaff() {
     }
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+        const authorNameParam = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')).trim() : '';
+
+async function initAuthorPage() {
+            const mainArea = document.getElementById('main-content-area');
+
+            if (!authorNameParam) {
+                mainArea.innerHTML = `
+                    <div class="state-container">
+                        <div class="state-title">Walang Tinukoy na May-Akda</div>
+                        <div class="state-description">Ang pahinang ito ay nangangailangan ng wastong pangalan sa link upang maipakita ang profile at mga akda.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            mainArea.innerHTML = `
+                <div class="page-header">
+                    <span class="page-kicker">May-Akda / Manunulat</span>
+                    <h1 id="author-name-heading">${escapeHtml(authorNameParam)}</h1>
+                </div>
+
+                <h2 class="section-title">Mga Inilathalang Akda</h2>
+                
+                <div class="articles-grid" id="author-articles-container">
+                    <div class="state-container" style="grid-column: span 2; margin-top: 0;">
+                        <div class="state-title">Kinukuha ang mga ulat...</div>
+                        <div class="state-description">Mangyaring maghintay habang hinahanap namin ang mga naisulat na akda.</div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(TSV_SHEET_URL);
+                if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Google Sheets.');
+
+                const tsvText = await response.text();
+                const rows = tsvText.split('\n').map(row => row.split('\t'));
+
+                if (rows.length === 0) throw new Error('Walang laman ang TSV data.');
+
+                // Pagkuha ng mga column index (Column 1 = index 0 para sa Category, Column 5 = index 4 para sa Link/Slug, atbp.)
+                const colsHeader = rows[0].map(h => h.trim().toLowerCase());
+                
+                const categoryIdx = 0; // Column 1
+                const titleIdx = colsHeader.findIndex(h => h.includes('title') || h.includes('pamagat'));
+                const authorIdx = colsHeader.findIndex(h => h.includes('author') || h.includes('may-akda') || h.includes('manunulat'));
+                const dateIdx = colsHeader.findIndex(h => h.includes('date') || h.includes('petsa'));
+                const slugIdx = 4; // Column 5
+
+                let authorArticles = [];
+
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (authorIdx !== -1 && cols[authorIdx]) {
+                        const rowAuthor = cols[authorIdx].trim();
+                        if (rowAuthor.toLowerCase() === authorNameParam.toLowerCase()) {
+                            authorArticles.push({
+                                category: cols[categoryIdx] ? cols[categoryIdx].trim() : 'Pangkalahatan',
+                                title: titleIdx !== -1 && cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
+                                date: dateIdx !== -1 && cols[dateIdx] ? formatDateToFilipino(cols[dateIdx]) : '',
+                                link: cols[slugIdx] ? cols[slugIdx].trim() : '#'
+                            });
+                        }
+                    }
+                }
+
+                const container = document.getElementById('author-articles-container');
+                if (authorArticles.length > 0) {
+                    container.innerHTML = '';
+                    authorArticles.forEach(art => {
+                        const card = document.createElement('a');
+                        card.href = art.link;
+                        card.className = 'article-card';
+                        card.innerHTML = `
+                            <div>
+                                <div class="article-category">${escapeHtml(art.category)}</div>
+                                <div class="article-title">${escapeHtml(art.title)}</div>
+                            </div>
+                            <div class="article-meta">
+                                <span>${escapeHtml(art.date)}</span>
+                                <span class="article-read-text">Basahin ang ulat</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = `
+                        <div class="state-container" style="grid-column: span 2; margin-top: 0;">
+                            <div class="state-title">Walang Nakitang Akda</div>
+                            <div class="state-description">Wala pang naitalang nailathalang ulat o artikulo mula kay <strong>${escapeHtml(authorNameParam)}</strong> sa kasalukuyan.</div>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error("Error fetching author articles:", error);
+                const container = document.getElementById('author-articles-container');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="state-container" style="grid-column: span 2; margin-top: 0;">
+                            <div class="state-title">Nabigo sa Pagkonekta</div>
+                            <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos mula sa database. Mangyaring subukang muli mamaya.</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
 // --- INITIALIZE ALL ENGINES SAFELY ---
 document.addEventListener('DOMContentLoaded', () => {
     loadSheetData();
     initArchivesPage();
+    initAuthorPage();
     fetchEditorialStaff();
 });
