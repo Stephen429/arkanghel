@@ -187,7 +187,7 @@
         .archive-card:hover .archive-thumbnail { transform: scale(1.02); }
 
         .archive-content { padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
-        .archive-publication { font-family: var(--font-headline); font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+        .archive-publication { font-family: var(--headline-font); font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
         .archive-volume { font-family: var(--font-google-sans); font-size: 0.9rem; font-weight: 600; color: var(--maroon-light); margin-bottom: 0.3rem; }
         .archive-period { font-family: var(--font-google-sans); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem; }
         
@@ -201,7 +201,7 @@
 
         /* State Container for Loading / Errors */
         .state-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 4rem 2rem; text-align: center; box-shadow: var(--shadow-subtle); grid-column: span 2; }
-        .state-title { font-family: var(--font-headline); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+        .state-title { font-family: var(--headline-font); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
         .state-description { font-family: var(--font-google-sans); font-size: 0.92rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.5; }
 
         /* Footer */
@@ -218,12 +218,12 @@
             /* Main Content Layout */
         main { max-width: 860px; margin: 3rem auto; padding: 0 1.5rem; width: 100%; flex: 1; word-wrap: break-word; overflow-wrap: break-word; }
 
-        .page-title { font-family: var(--font-headline); font-size: 2.6rem; line-height: 1.2; font-weight: 700; margin-bottom: 1.5rem; }
+        .page-title { font-family: var(--headline-font); font-size: 2.6rem; line-height: 1.2; font-weight: 700; margin-bottom: 1.5rem; }
         .page-lead-divider { height: 2px; background: var(--maroon-main); margin-bottom: 2.5rem; border: none; }
 
         /* Content Sections */
         .content-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 2rem; box-shadow: var(--shadow-subtle); margin-bottom: 1.8rem; }
-        .content-box h2 { margin-top: 0; font-size: 1.3rem; font-family: var(--font-headline); color: var(--text); margin-bottom: 1rem; }
+        .content-box h2 { margin-top: 0; font-size: 1.3rem; font-family: var(--headline-font); color: var(--text); margin-bottom: 1rem; }
         
         .content-box p { font-family: var(--font-google-sans); font-size: 1.02rem; line-height: 1.75; color: var(--text-muted); margin-bottom: 1.2rem; }
         .content-box p:last-child { margin-bottom: 0; }
@@ -260,7 +260,7 @@
 
         /* Section Divider / Header Style (Galing sa Merged Rows) */
         .editorial-section-title { 
-            font-family: var(--font-headline); 
+            font-family: var(--headline-font); 
             font-size: 1.3rem; 
             color: var(--text); 
             margin: 3rem 0 1.2rem 0; 
@@ -281,7 +281,7 @@
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
 
         .staff-role { font-family: var(--font-google-sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.2rem; }
-        .staff-name { font-family: var(--font-headline); font-size: 1.05rem; font-weight: 700; color: var(--text); }
+        .staff-name { font-family: var(--headline-font); font-size: 1.05rem; font-weight: 700; color: var(--text); }
 
         /* Grids */
         .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 1.5rem; }
@@ -301,10 +301,10 @@
         /* Clean Page Header */
         .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--card-border); }
         .page-kicker { font-family: var(--font-google-sans); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.3rem; display: block; }
-        .page-header h1 { font-family: var(--font-headline); font-size: 2rem; margin: 0 0 0.3rem 0; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
+        .page-header h1 { font-family: var(--headline-font); font-size: 2rem; margin: 0 0 0.3rem 0; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
         .page-header p { font-family: var(--font-google-sans); color: var(--text-muted); font-size: 0.9rem; margin: 0; }
 
-        .section-title { font-family: var(--font-headline); font-size: 1.15rem; margin: 2rem 0 1rem 0; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .section-title { font-family: var(--headline-font); font-size: 1.15rem; margin: 2rem 0 1rem 0; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .section-title::after { content: ''; flex: 1; height: 1px; background: var(--card-border); margin-left: 10px; }
 
         /* Compact Homepage-style Article Cards */
@@ -313,13 +313,13 @@
         .article-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--maroon-light); }
         
         .article-category { font-family: var(--font-google-sans); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--maroon-light); font-weight: 700; margin-bottom: 0.4rem; }
-        .article-title { font-family: var(--font-headline); font-size: 1.02rem; font-weight: 700; margin-bottom: 0.8rem; line-height: 1.35; }
+        .article-title { font-family: var(--headline-font); font-size: 1.02rem; font-weight: 700; margin-bottom: 0.8rem; line-height: 1.35; }
         .article-meta { font-family: var(--font-google-sans); font-size: 0.76rem; color: var(--text-muted); padding-top: 0.75rem; border-top: 1px solid var(--card-border); margin-top: auto; display: flex; align-items: center; justify-content: space-between; font-weight: 500; }
         .article-read-text { color: var(--maroon-light); font-weight: 600; }
 
         /* Compact State Container */
         .state-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 3rem 1.5rem; text-align: center; box-shadow: var(--shadow-subtle); margin-top: 1rem; }
-        .state-title { font-family: var(--font-headline); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+        .state-title { font-family: var(--headline-font); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
         .state-description { font-family: var(--font-google-sans); font-size: 0.88rem; color: var(--text-muted); max-width: 380px; margin: 0 auto; line-height: 1.4; }
 
         /* Footer */
@@ -338,7 +338,7 @@
         
         .category-header { margin-bottom: 2.5rem; border-bottom: 2px solid var(--maroon-main); padding-bottom: 1rem; }
         .category-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--maroon-light); font-family: var(--font-google-sans); margin-bottom: 0.5rem; display: block; }
-        .category-title { font-family: var(--font-headline); font-size: 2.4rem; font-weight: 700; color: var(--text); margin: 0; }
+        .category-title { font-family: var(--headline-font); font-size: 2.4rem; font-weight: 700; color: var(--text); margin: 0; }
 
         /* Compact Article List Format */
         .compact-list { display: flex; flex-direction: column; gap: 16px; }
