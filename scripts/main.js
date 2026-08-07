@@ -422,6 +422,153 @@ function renderPage(page) {
 }
 window.renderPage = renderPage;
 
+let categoryState = {
+    articles: [],
+    currentPage: 1,
+    perPage: 10,
+    targetCategory: ''
+};
+
+async function initCategoryPage() {
+    const listContainer = document.getElementById('articles-list');
+    if (!listContainer) return;
+
+    // Determine target category dynamically from HTML header or filename
+    const titleElement = document.querySelector('.category-title') || document.querySelector('.page-header h1');
+    const detectedTitle = titleElement ? titleElement.textContent.trim().toUpperCase() : '';
+    
+    categoryState.targetCategory = detectedTitle;
+
+    try {
+        const response = await fetch(CONFIG.ARTICLES_TSV);
+        if (!response.ok) throw new Error('Nabigo sa pagkonekta.');
+
+        const tsvText = await response.text();
+        const rows = tsvText.split('\n').map(row => row.split('\t'));
+
+        if (rows.length <= 1) {
+            listContainer.innerHTML = `<div style="text-align:center; padding: 3rem; color:var(--text-muted);">Walang nakitang artikulo sa kategoryang ito.</div>`;
+            return;
+        }
+
+        const headers = rows[0].map(h => h.trim().toUpperCase());
+        const typeIdx = headers.indexOf('TYPE');
+        const dateIdx = headers.indexOf('DATE');
+        const titleIdx = headers.indexOf('HEADLINE/TITLE');
+        const leadIdx = headers.indexOf('LEAD SENTENCE');
+        const linkIdx = headers.indexOf('LINK');
+        const authorIdx = headers.indexOf('AUTHOR');
+
+        let rawArticles = [];
+
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i];
+            if (cols.length >= headers.length) {
+                const typeVal = cols[typeIdx] ? cols[typeIdx].trim().toUpperCase() : '';
+
+                if (isCategoryMatch(typeVal, categoryState.targetCategory)) {
+                    const rawDate = cols[dateIdx] ? cols[dateIdx].trim() : '';
+                    rawArticles.push({
+                        type: typeVal,
+                        date: formatDateToFilipino(rawDate),
+                        title: cols[titleIdx] ? cols[titleIdx].trim() : 'Walang Pamagat',
+                        lead: cols[leadIdx] ? cols[leadIdx].trim() : 'Mag-click upang basahin ang buong detalye ng artikulong ito.',
+                        link: cols[linkIdx] ? cols[linkIdx].trim() : '#',
+                        author: cols[authorIdx] ? cols[authorIdx].trim() : 'Patnugutan',
+                        image: ''
+                    });
+                }
+            }
+        }
+
+        // Parallel thumbnail fetching
+        categoryState.articles = await Promise.all(rawArticles.map(async (art) => {
+            if (art.link && art.link !== '#') {
+                const fetchedImg = await fetchArticleThumbnail(art.link);
+                if (fetchedImg) art.image = fetchedImg;
+            }
+            return art;
+        }));
+
+        renderCategoryPage(1);
+
+    } catch (error) {
+        console.error('Error sa pag-load ng kategorya:', error);
+        listContainer.innerHTML = `
+            <div style="text-align:center; padding: 3rem; color:var(--maroon-light);">
+                <strong>Paumanhin, hindi ma-load ang mga artikulo sa kasalukuyan.</strong><br>
+                <span style="font-size:0.85rem; color:var(--text-muted);">Suriin ang iyong koneksyon.</span>
+            </div>`;
+    }
+}
+
+function isCategoryMatch(tsvCategory, pageCategory) {
+    if (!tsvCategory || !pageCategory) return true; // Default fallback
+
+    const target = pageCategory.toUpperCase();
+    
+    if (target.includes('BALITA')) {
+        return tsvCategory === 'NEWS' || tsvCategory === 'BALITAAN' || tsvCategory === 'BALITA';
+    }
+    if (target.includes('OPINYON') || target.includes('OPINION')) {
+        return tsvCategory === 'OPINION' || tsvCategory === 'OPINYON';
+    }
+    if (target.includes('LATHALAIN') || target.includes('FEATURE')) {
+        return tsvCategory === 'FEATURE' || tsvCategory === 'LATHALAIN';
+    }
+    if (target.includes('AGHAM') || target.includes('AG-TEK') || target.includes('SCI-TECH')) {
+        return tsvCategory === 'AGHAM' || tsvCategory === 'AG-TEK' || tsvCategory === 'SCI-TECH';
+    }
+    if (target.includes('ISPORTS') || target.includes('SPORTS')) {
+        return tsvCategory === 'SPORTS' || tsvCategory === 'ISPORTS';
+    }
+
+    return tsvCategory === target;
+}
+
+function renderCategoryPage(page) {
+    categoryState.currentPage = page;
+    const listContainer = document.getElementById('articles-list');
+    const paginationContainer = document.getElementById('pagination-controls');
+
+    if (!listContainer) return;
+
+    if (categoryState.articles.length === 0) {
+        listContainer.innerHTML = `<div style="text-align:center; padding: 3rem; color:var(--text-muted);">Walang nakitang artikulo sa kategoryang ito.</div>`;
+        if (paginationContainer) paginationContainer.innerHTML = '';
+        return;
+    }
+
+    const startIndex = (page - 1) * categoryState.perPage;
+    const endIndex = startIndex + categoryState.perPage;
+    const paginatedArticles = categoryState.articles.slice(startIndex, endIndex);
+
+    let htmlContent = '';
+    paginatedArticles.forEach(art => {
+        const imageHTML = art.image 
+            ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="compact-thumb">` 
+            : '';
+        
+        const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
+
+        htmlContent += `
+            <a href="${escapeHtml(art.link)}" class="compact-card" style="${cardStyle}">
+                <div class="compact-info">
+                    <div class="compact-meta">
+                        <span>${escapeHtml(art.date)}</span>
+                        <span>•</span>
+                        <span>Mula kay ${escapeHtml(art.author)}</span>
+                    </div>
+                    <h2 class="compact-headline">${escapeHtml(art.title)}</h2>
+                    <p class="compact-excerpt">${escapeHtml(art.lead)}</p>
+                </div>
+                ${imageHTML}
+            </a>
+        `;
+    });
+
+    listContainer.innerHTML = htmlContent;
+    
 // --- 👥 EDITORIAL STAFF PAGE ENGINE ---
 async function fetchEditorialStaff() {
     const container = document.getElementById('editorial-container');
@@ -617,5 +764,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSheetData();
     initArchivesPage();
     initAuthorPage();
+    initCategoryPage();
     fetchEditorialStaff();
 });
