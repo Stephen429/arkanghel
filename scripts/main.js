@@ -1,9 +1,12 @@
-const TSV_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
+// --- CONFIGURATION URLS ---
+const ARTICLES_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
 const ARCHIVES_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=2103034515&single=true&output=tsv';
+const EDITORIAL_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=1368403362&single=true&output=tsv';
 
-lucide.createIcons();
+// Initialize Lucide Icons
+if (window.lucide) lucide.createIcons();
 
-// 🌙 Smart Dark Mode Engine
+// --- 🌙 SMART DARK MODE ENGINE ---
 function initTheme() {
     const savedTheme = localStorage.getItem('theme_preference');
     const hour = new Date().getHours();
@@ -21,7 +24,7 @@ function updateThemeIcon() {
     const icon = document.getElementById('theme-icon');
     if (icon) {
         icon.setAttribute('data-lucide', document.body.classList.contains('dark-mode') ? 'moon' : 'sun');
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     }
 }
 
@@ -33,22 +36,29 @@ if (themeToggleBtn) {
         updateThemeIcon();
     });
 }
-
 initTheme();
 
-// Mobile Panel Handlers
+// --- 📱 MOBILE DRAWER & BACKDROP HANDLERS ---
 const menuToggle = document.getElementById('menu-toggle');
 const menuClose = document.getElementById('menu-close');
 const mobilePanel = document.getElementById('mobile-panel');
+const mobileOverlay = document.getElementById('mobile-overlay');
 
-if (menuToggle && mobilePanel) {
-    menuToggle.addEventListener('click', () => mobilePanel.classList.add('open'));
-}
-if (menuClose && mobilePanel) {
-    menuClose.addEventListener('click', () => mobilePanel.classList.remove('open'));
+function openMobileMenu() {
+    if (mobilePanel) mobilePanel.classList.add('open');
+    if (mobileOverlay) mobileOverlay.classList.add('open');
 }
 
-// Date Formatter Engine
+function closeMobileMenu() {
+    if (mobilePanel) mobilePanel.classList.remove('open');
+    if (mobileOverlay) mobileOverlay.classList.remove('open');
+}
+
+if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
+if (menuClose) menuClose.addEventListener('click', closeMobileMenu);
+if (mobileOverlay) mobileOverlay.addEventListener('click', closeMobileMenu);
+
+// --- 📅 DATE FORMATTER ENGINE ---
 function formatFilipinoDate(dateInput) {
     if (!dateInput) return '';
     const d = new Date(dateInput);
@@ -62,9 +72,20 @@ function formatFilipinoDate(dateInput) {
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
-// Image Fetcher mula sa article-image-box ng indibidwal na HTML page
+// Utility Helper for HTML Escaping
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// --- 🖼️ IMAGE FETCHER FROM INDIVIDUAL PAGES ---
 async function fetchArticleThumbnail(articleUrl) {
-    if (!articleUrl || articleUrl === '#') return '';
+    if (!articleUrl || articleUrl === '#' || articleUrl.startsWith('http')) return '';
     try {
         const response = await fetch(articleUrl);
         const htmlText = await response.text();
@@ -72,24 +93,23 @@ async function fetchArticleThumbnail(articleUrl) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         
-        const imageBox = doc.querySelector('.article-image-box');
-        if (imageBox) {
-            const imgTag = imageBox.querySelector('img');
-            if (imgTag && imgTag.src) {
-                return imgTag.src;
-            }
+        const imageBox = doc.querySelector('.article-image-box img');
+        if (imageBox && imageBox.src) {
+            return imageBox.getAttribute('src');
         }
         return '';
     } catch (e) {
-        console.error('Hindi nakuha ang larawan mula sa:', articleUrl, e);
         return '';
     }
 }
 
-// TSV Fetching & Parsing
+// --- 📰 ARTICLES & HOMEPAGE ENGINE ---
 async function loadSheetData() {
+    const carouselContainer = document.getElementById('carousel-slides');
+    if (!carouselContainer) return; // Exit kung wala sa Homepage
+
     try {
-        const res = await fetch(TSV_SHEET_URL);
+        const res = await fetch(ARTICLES_TSV_URL);
         const text = await res.text();
         
         const lines = text.split('\n').map(row => row.split('\t'));
@@ -113,16 +133,14 @@ async function loadSheetData() {
             }
         }
 
-        // Sort by Date Recent
+        // Sort by Date (Most Recent First)
         rawArticles.sort((a, b) => b.dateObj - a.dateObj);
 
-        // Sabay-sabay na kukunin ang mga larawan para sa mga artikulong ipapakita sa homepage
+        // Fetch thumbnails for top articles
         const articles = await Promise.all(rawArticles.map(async (art) => {
             if (art.link && art.link !== '#') {
                 const fetchedImg = await fetchArticleThumbnail(art.link);
-                if (fetchedImg) {
-                    art.image = fetchedImg;
-                }
+                if (fetchedImg) art.image = fetchedImg;
             }
             return art;
         }));
@@ -130,26 +148,23 @@ async function loadSheetData() {
         renderTopStories(articles);
         renderCategoryFeeds(articles);
 
-        // Sabay na i-fade out ang carousel loader at i-fade in ang carousel content
-        const carouselLoader = document.getElementById('carousel-loader');
-        const carouselContent = document.getElementById('carousel-main-content');
-        if (carouselLoader && carouselContent) {
-            carouselLoader.classList.add('fade-out');
-            carouselContent.classList.add('loaded');
-        }
+        hideCarouselLoader();
 
     } catch (err) {
         console.error("Failed to load Google Sheets TSV Data:", err);
-        const carouselLoader = document.getElementById('carousel-loader');
-        const carouselContent = document.getElementById('carousel-main-content');
-        if (carouselLoader && carouselContent) {
-            carouselLoader.classList.add('fade-out');
-            carouselContent.classList.add('loaded');
-        }
+        hideCarouselLoader();
     }
 }
 
-// Dynamic Top Stories Carousel
+function hideCarouselLoader() {
+    const carouselLoader = document.getElementById('carousel-loader');
+    const carouselContent = document.getElementById('carousel-main-content');
+    if (carouselLoader && carouselContent) {
+        carouselLoader.classList.add('fade-out');
+        carouselContent.classList.add('loaded');
+    }
+}
+
 function renderTopStories(articles) {
     if (!articles.length) return;
     
@@ -172,7 +187,6 @@ function renderTopStories(articles) {
         
         slide.style.background = bgStyle;
         
-        // Tukuyin ang display label para sa badge (Filipino mapping)
         let badgeText = item.type;
         if (item.type === 'NEWS') badgeText = 'Balita';
         else if (item.type === 'OPINION') badgeText = 'Opinyon';
@@ -183,10 +197,10 @@ function renderTopStories(articles) {
         slide.innerHTML = `
             <div class="carousel-content">
                 <span class="badge">${badgeText}</span>
-                <h2 class="carousel-title">${item.headline}</h2>
-                <p class="carousel-lead">${item.lead}</p>
+                <h2 class="carousel-title">${escapeHtml(item.headline)}</h2>
+                <p class="carousel-lead">${escapeHtml(item.lead)}</p>
                 <div class="meta-info">
-                    <span><i data-lucide="user" style="width:13px;height:13px;"></i> ${item.author}</span>
+                    <span><i data-lucide="user" style="width:13px;height:13px;"></i> ${escapeHtml(item.author)}</span>
                     ${item.dateFormatted ? `<span><i data-lucide="calendar" style="width:13px;height:13px;"></i> ${item.dateFormatted}</span>` : ''}
                 </div>
             </div>
@@ -198,7 +212,7 @@ function renderTopStories(articles) {
         indicators.appendChild(dot);
     });
 
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     startCarousel();
 }
 
@@ -219,18 +233,16 @@ function startCarousel() {
     }, 7000);
 }
 
-// Dynamic Category Feeds Renderer (Balita, Opinyon, Lathalain, Ag-Tek, Isports)
 function renderCategoryFeeds(articles) {
     const map = {
         'NEWS': { id: 'feed-news', label: 'Balita' },
         'BALITA': { id: 'feed-news', label: 'Balita' },
         'OPINION': { id: 'feed-opinion', label: 'Opinyon' },
-        'OPIYON': { id: 'feed-opinion', label: 'Opinyon' },
+        'OPINYON': { id: 'feed-opinion', label: 'Opinyon' },
         'FEATURE': { id: 'feed-feature', label: 'Lathalain' },
         'LATHALAIN': { id: 'feed-feature', label: 'Lathalain' },
         'SCI-TECH': { id: 'feed-scitech', label: 'Ag-Tek' },
         'AG-TEK': { id: 'feed-scitech', label: 'Ag-Tek' },
-        'AGHAM AT TEKNOLOHIYA': { id: 'feed-scitech', label: 'Ag-Tek' },
         'SPORTS': { id: 'feed-sports', label: 'Isports' },
         'ISPORTS': { id: 'feed-sports', label: 'Isports' }
     };
@@ -244,8 +256,8 @@ function renderCategoryFeeds(articles) {
     const categorized = {};
     articles.forEach(item => {
         const mappingInfo = map[item.type];
-        const targetFeedKey = mappingInfo ? mappingInfo.id : null;
-        if (targetFeedKey) {
+        if (mappingInfo) {
+            const targetFeedKey = mappingInfo.id;
             if (!categorized[targetFeedKey]) categorized[targetFeedKey] = [];
             item.displayType = mappingInfo.label;
             categorized[targetFeedKey].push(item);
@@ -257,100 +269,69 @@ function renderCategoryFeeds(articles) {
     feedIds.forEach(feedId => {
         let items = categorized[feedId] || [];
         items = items.slice(0, MAX_ARTICLES_PER_CATEGORY);
-
         const container = document.getElementById(feedId);
         
         if (container && items.length > 0) {
             items.forEach((item, index) => {
+                const card = document.createElement('a');
+                card.href = item.link;
+
                 if (index === 0) {
-                    // Large Featured Card Layout
-                    const card = document.createElement('a');
-                    card.href = item.link;
                     card.className = 'featured-card';
-                    
                     const imgHTML = item.image 
-                        ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                        ? `<img src="${item.image}" alt="${escapeHtml(item.headline)}" style="width:100%; height:100%; object-fit:cover;">`
                         : `<i data-lucide="image" style="width:36px;height:36px; color:var(--text-muted);"></i>`;
 
                     card.innerHTML = `
-                        <div class="featured-img-container">
-                            ${imgHTML}
-                        </div>
+                        <div class="featured-img-container">${imgHTML}</div>
                         <div>
                             <div class="meta-info" style="color:var(--maroon-light); font-weight:600; margin-bottom:6px;">
                                 <span>${item.displayType}</span>
                                 ${item.dateFormatted ? `• <span>${item.dateFormatted}</span>` : ''}
                             </div>
-                            <h3>${item.headline}</h3>
-                            <p>${item.lead}</p>
-                            <span class="author-tag">Akda ni ${item.author}</span>
+                            <h3>${escapeHtml(item.headline)}</h3>
+                            <p>${escapeHtml(item.lead)}</p>
+                            <span class="author-tag">Akda ni ${escapeHtml(item.author)}</span>
                         </div>
                     `;
-                    container.appendChild(card);
                 } else {
-                    // Compact Card Layout
-                    const card = document.createElement('a');
-                    card.href = item.link;
                     card.className = 'compact-card';
-
                     const imgHTML = item.image 
-                        ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                        ? `<img src="${item.image}" alt="${escapeHtml(item.headline)}" style="width:100%; height:100%; object-fit:cover;">`
                         : `<i data-lucide="file-text" style="width:24px;height:24px; color:var(--text-muted);"></i>`;
 
                     card.innerHTML = `
-                        <div class="compact-img-container">
-                            ${imgHTML}
-                        </div>
+                        <div class="compact-img-container">${imgHTML}</div>
                         <div>
-                            <h3>${item.headline}</h3>
-                            <p>${item.lead}</p>
-                            <span class="author-tag">Akda ni ${item.author}</span>
+                            <h3>${escapeHtml(item.headline)}</h3>
+                            <p>${escapeHtml(item.lead)}</p>
+                            <span class="author-tag">Akda ni ${escapeHtml(item.author)}</span>
                         </div>
                     `;
-                    container.appendChild(card);
                 }
+                container.appendChild(card);
             });
         }
     });
     
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
 }
 
-loadSheetData();
-
+// --- 📚 ARCHIVES PAGE ENGINE ---
 let allArchivesList = [];
 const articlesPerPage = 4;
 let currentPage = 1;
 
 async function initArchivesPage() {
     const container = document.getElementById('archives-container');
-    if (!container) return;
+    if (!container) return; // Exit kung wala sa Archives Page
 
     try {
-        if (ARCHIVES_TSV_URL.includes('PALITAN_')) {
-            allArchivesList = [
-                { publication: "Ang Arkanghel", volume: "Tomo I - Bilang I", period: "Hunyo 2025 - Enero 2026", thumbnail: "arkanghel-vol1-no1.jpg", link: "article.html?id=arkanghel-vol1-1" },
-                { publication: "The Courier", volume: "Volume IV - Release I", period: "June 2018 - March 2019", thumbnail: "courier-vol4-rel1.jpg", link: "article.html?id=courier-vol4-1" },
-            ];
-            renderPage(1);
-            return;
-        }
-
         const response = await fetch(ARCHIVES_TSV_URL);
         if (!response.ok) throw new Error('Nabigo sa pagkonekta sa Archives Google Sheets.');
 
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
-
-        if (rows.length <= 1) {
-            container.innerHTML = `
-                <div class="state-container">
-                    <div class="state-title">Walang Nakitang Isyu</div>
-                    <div class="state-description">Wala pang nailalagay o naipapalabas na mga lumang isyu sa kasalukuyan.</div>
-                </div>
-            `;
-            return;
-        }
 
         allArchivesList = [];
         for (let i = 1; i < rows.length; i++) {
@@ -365,15 +346,13 @@ async function initArchivesPage() {
                 });
             }
         }
-
         renderPage(1);
-
     } catch (error) {
         console.error("Error fetching archives:", error);
         container.innerHTML = `
             <div class="state-container">
                 <div class="state-title">Nabigo sa Pagkonekta</div>
-                <div class="state-description">Nagkaroon ng problema sa pagkuha ng mga datos ng silid-aklatan. Mangyaring subukang muli mamaya.</div>
+                <div class="state-description">Nagkaroon ng problema sa pagkuha ng datos ng silid-aklatan.</div>
             </div>
         `;
     }
@@ -383,7 +362,6 @@ function renderPage(page) {
     currentPage = page;
     const container = document.getElementById('archives-container');
     const paginationContainer = document.getElementById('pagination-container');
-
     if (!container) return;
 
     if (!allArchivesList || allArchivesList.length === 0) {
@@ -398,18 +376,20 @@ function renderPage(page) {
     }
 
     const startIndex = (page - 1) * articlesPerPage;
-    const endIndex = startIndex + articlesPerPage;
-    const paginatedItems = allArchivesList.slice(startIndex, endIndex);
+    const paginatedItems = allArchivesList.slice(startIndex, startIndex + articlesPerPage);
 
     container.innerHTML = '';
     paginatedItems.forEach(item => {
-        const thumbPath = item.thumbnail.startsWith('assets/archive/') ? item.thumbnail : `assets/archive/${item.thumbnail}`;
+        const thumbPath = item.thumbnail.startsWith('http') || item.thumbnail.startsWith('assets/') 
+            ? item.thumbnail 
+            : `assets/archive/${item.thumbnail}`;
+
         const card = document.createElement('a');
         card.href = item.link;
         card.className = 'archive-card';
         card.innerHTML = `
             <div class="archive-thumbnail-container">
-                <img src="${escapeHtml(thumbPath)}" alt="${escapeHtml(item.publication)} - ${escapeHtml(item.volume)}" class="archive-thumbnail" onerror="this.src='assets/arkanghel.png'">
+                <img src="${escapeHtml(thumbPath)}" alt="${escapeHtml(item.publication)}" class="archive-thumbnail" onerror="this.src='assets/arkanghel.png'">
             </div>
             <div class="archive-content">
                 <div>
@@ -426,10 +406,9 @@ function renderPage(page) {
     });
 
     if (paginationContainer) {
-        if (allArchivesList.length > articlesPerPage) {
-            const totalPages = Math.ceil(allArchivesList.length / articlesPerPage);
+        const totalPages = Math.ceil(allArchivesList.length / articlesPerPage);
+        if (totalPages > 1) {
             let paginationHTML = '';
-            
             for (let p = 1; p <= totalPages; p++) {
                 paginationHTML += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="renderPage(${p})">${p}</button>`;
             }
@@ -439,88 +418,75 @@ function renderPage(page) {
         }
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
 }
-
 window.renderPage = renderPage;
 
-initArchivesPage();
-
-const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ45lr5GfiSmKn6wyhGNcMngVCtuBO4SNXjoYiuHGUas_MMOS9mWCP_YUbdpDeYa0SqfLRxH2yUQoV5/pub?gid=0&single=true&output=tsv';
-
+// --- 👥 EDITORIAL STAFF PAGE ENGINE ---
 async function fetchEditorialStaff() {
     const container = document.getElementById('editorial-container');
-    if (!container) return;
+    if (!container) return; // Exit kung wala sa Editorial Page
 
     try {
-        const response = await fetch(SHEET_TSV_URL);
+        const response = await fetch(EDITORIAL_TSV_URL); // Ginagamit na ang tamang GID Sheet
         if (!response.ok) throw new Error('Hindi nakuhang basahin ang Google Sheets data.');
         
         const tsvText = await response.text();
         const rows = tsvText.split('\n').map(row => row.split('\t'));
         
         container.innerHTML = ''; 
-
         let gridWrapperOpen = false;
         let htmlContent = '';
 
         for (let i = 1; i < rows.length; i++) {
             const cols = rows[i];
-            if (cols.length === 0) continue;
+            if (!cols || cols.length === 0) continue;
 
-            const col0 = cols[0] ? cols[0].trim() : '';
-            const col1 = cols[1] ? cols[1].trim() : '';
-            const col2 = cols[2] ? cols[2].trim() : '';
-            
-            if (!col0 && !col1 && !col2) continue;
+            const name = cols[0] ? cols[0].trim() : '';
+            const position = cols[1] ? cols[1].trim() : '';
+            const photoUrl = cols[2] ? cols[2].trim() : '';
 
-            const isMergedHeader = col0 && (!col1 && !col2);
+            if (!name && !position && !photoUrl) continue;
+
+            // Section Header detection (Merged Rows)
+            const isMergedHeader = name && (!position && !photoUrl);
 
             if (isMergedHeader) {
                 if (gridWrapperOpen) {
                     htmlContent += `</div>`;
                     gridWrapperOpen = false;
                 }
-
                 htmlContent += `
                     <h2 class="editorial-section-title">
                         <i data-lucide="bookmark" style="width:20px; height:20px; color:var(--maroon-light);"></i> 
-                        ${col0}
+                        ${escapeHtml(name)}
                     </h2>
                 `;
-                        } else {
+            } else {
                 if (!gridWrapperOpen) {
                     htmlContent += `<div class="staff-grid">`;
                     gridWrapperOpen = true;
                 }
 
-                const name = col0;
-                const position = col1;
-                const photoUrl = col2;
-
-                const avatarHTML = photoUrl 
-                    ? `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(name)}">`
-                    : name.charAt(0).toUpperCase();
+                let avatarHTML = position ? position.substring(0, 3).toUpperCase() : 'STAFF';
+                if (photoUrl) {
+                    const imgPath = photoUrl.startsWith('http') || photoUrl.startsWith('assets/') ? photoUrl : `assets/staff/${photoUrl}`;
+                    avatarHTML = `<img src="${escapeHtml(imgPath)}" alt="${escapeHtml(name)}">`;
+                }
 
                 htmlContent += `
                     <div class="staff-card">
-                        <div class="avatar-container">
-                            ${avatarHTML}
-                        </div>
-                        <h3 class="staff-name">${escapeHtml(name)}</h3>
-                        <p class="staff-position">${escapeHtml(position)}</p>
+                        <div class="avatar-container">${avatarHTML}</div>
+                        <div class="staff-role">${escapeHtml(position)}</div>
+                        <div class="staff-name">${escapeHtml(name || 'Bakante')}</div>
                     </div>
                 `;
             }
         }
 
-        if (gridWrapperOpen) {
-            htmlContent += `</div>`;
-        }
-
+        if (gridWrapperOpen) htmlContent += `</div>`;
         container.innerHTML = htmlContent;
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
 
     } catch (err) {
         console.error("Failed to load editorial staff:", err);
@@ -533,15 +499,9 @@ async function fetchEditorialStaff() {
     }
 }
 
-// Utility Helper for HTML Escaping
-function escapeHtml(str) {
-    if (!str) return '';
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-fetchEditorialStaff();
+// --- INITIALIZE ALL ENGINES SAFELY ---
+document.addEventListener('DOMContentLoaded', () => {
+    loadSheetData();
+    initArchivesPage();
+    fetchEditorialStaff();
+});
