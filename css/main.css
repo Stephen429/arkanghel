@@ -30,12 +30,61 @@
         
         * { box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: background 0.3s, color 0.3s; line-height: 1.6; }
+:root {
+            --maroon-dark: #4a000b;
+            --maroon-main: #6b0d18;
+            --maroon-accent: #800020;
+            --maroon-light: #a31c2b;
+            --maroon-soft: rgba(107, 13, 24, 0.08);
+            --bg: #fcf9f9;
+            --text: #1f1a1b;
+            --text-muted: #665a5c;
+            --card-bg: #ffffff;
+            --card-border: rgba(107, 13, 24, 0.12);
+            --shadow-sm: 0 2px 10px rgba(74, 0, 11, 0.04);
+            --shadow-md: 0 10px 30px rgba(74, 0, 11, 0.12);
+            --nav-overlay: rgba(252, 249, 249, 0.98);
+            --headline-font: 'Literata', serif;
+            --font-google-sans: 'Google Sans', sans-serif;
+        }
+
+        body.dark-mode { 
+            --bg: #0d0809; 
+            --text: #f5ecee; 
+            --text-muted: #b3a1a4; 
+            --card-bg: #170f11; 
+            --card-border: rgba(255, 255, 255, 0.08);
+            --maroon-soft: rgba(163, 28, 43, 0.2);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.4);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.6);
+            --nav-overlay: rgba(23, 15, 17, 0.98);
+        }
+        
+        * { box-sizing: border-box; }
+
+        /* Base Layout */
+        html {
+            height: 100%;
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            transition: background 0.3s, color 0.3s; 
+            line-height: 1.6;
+            
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         
         /* Literata Typography for Headlines */
         h1, h2, h3, .headline-font { font-family: 'Literata', serif; margin: 0; }
 
         /* Compact Proportionate Header */
-        header { padding: 0.75rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 2px solid var(--maroon-main); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+        header { padding: 0.75rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-bottom: 2px solid var(--maroon-main); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); flex-shrink: 0; }
         .logo-container { display: flex; align-items: center; text-decoration: none; }
         .logo-img { height: 34px; width: auto; object-fit: contain; }
         
@@ -128,8 +177,14 @@
         .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.35); border-radius: 50%; transition: 0.3s; cursor: pointer; }
         .dot.active { background: var(--maroon-light); width: 28px; border-radius: 10px; }
 
-        /* Main Content Layout */
-        main { max-width: 1080px; margin: 0 auto; padding: 0 1.2rem; }
+        /* Main Content Area */
+        main { 
+            max-width: 1080px; 
+            margin: 0 auto; 
+            padding: 0 1.2rem; 
+            width: 100%;
+            flex: 1 0 auto; 
+        }
         section { margin-bottom: 3.5rem; }
         
         .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; border-bottom: 2px solid var(--maroon-main); padding-bottom: 0.6rem; }
@@ -164,10 +219,22 @@
         .util-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 1rem; border-radius: 10px; font-weight: 600; text-decoration: none; color: var(--text); box-shadow: var(--shadow-sm); transition: 0.2s; font-size: 0.88rem; }
         .util-btn:hover { border-color: var(--maroon-light); color: var(--maroon-light); transform: translateY(-2px); }
 
-        footer { text-align: center; padding: 3rem 1rem; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 3rem; background: var(--card-bg); }
+        /* Footer Element */
+        footer { 
+            text-align: center; 
+            padding: 3rem 1rem; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            border-top: 1px solid var(--card-border); 
+            margin-top: 3rem; 
+            background: var(--card-bg); 
+            width: 100%;
+            flex-shrink: 0; 
+        }
 
         .desktop-nav-wrapper { display: block; }
         .mobile-menu-trigger { display: none; }
+
 
         @media (max-width: 820px) {
             .desktop-nav-wrapper { display: none; }
