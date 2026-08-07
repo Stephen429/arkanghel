@@ -557,7 +557,7 @@ function renderCategoryPage(page) {
     let htmlContent = '';
     paginatedArticles.forEach(art => {
         const imageHTML = art.image 
-            ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="compact-thumb">` 
+            ? `<img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" class="featured-img-container">` 
             : '';
         
         const cardStyle = art.image ? '' : 'grid-template-columns: 1fr;';
