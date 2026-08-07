@@ -344,8 +344,8 @@
 
         /* Compact Article List Format */
         .compact-list { display: flex; flex-direction: column; gap: 16px; }
-        .compact-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 140px; gap: 20px; align-items: center; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; box-shadow: var(--shadow-subtle); }
-        .compact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--maroon-main); }
+        .compact-art-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 140px; gap: 20px; align-items: center; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; box-shadow: var(--shadow-subtle); }
+        .compact-art-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--maroon-main); }
         
         .compact-info { display: flex; flex-direction: column; gap: 6px; }
         .compact-meta { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-google-sans); font-weight: 600; display: flex; gap: 12px; }
