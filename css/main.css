@@ -471,3 +471,17 @@
             .compact-thumb { width: 100%; height: 160px; order: -1; }
             .category-title { font-size: 1.8rem; }
         }
+                    
+body {
+    overflow-x: hidden;
+    position: relative;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+    z-index: 9999 !important;
+                   }
+                    
