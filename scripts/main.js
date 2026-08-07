@@ -291,23 +291,26 @@ function renderCategoryFeeds(articles) {
                             </div>
                             <h3>${escapeHtml(item.headline)}</h3>
                             <p>${escapeHtml(item.lead)}</p>
-                            <span class="author-tag">Akda ni ${escapeHtml(item.author)}</span>
+                            <span class="author-tag">Ulat ni ${escapeHtml(item.author)}</span>
                         </div>
                     `;
                 } else {
                     card.className = 'compact-card';
-                    const imgHTML = item.image 
-                        ? `<img src="${item.image}" alt="${escapeHtml(item.headline)}" style="width:100%; height:100%; object-fit:cover;">`
-                        : `<i data-lucide="file-text" style="width:24px;height:24px; color:var(--text-muted);"></i>`;
 
-                    card.innerHTML = `
-                        <div class="compact-img-container">${imgHTML}</div>
-                        <div>
-                            <h3>${escapeHtml(item.headline)}</h3>
-                            <p>${escapeHtml(item.lead)}</p>
-                            <span class="author-tag">Akda ni ${escapeHtml(item.author)}</span>
-                        </div>
-                    `;
+                        const imgHTML = item.image 
+                            ? `<img src="${item.image}" alt="${item.headline}" style="width:100%; height:100%; object-fit:cover;">`
+                            : `<i data-lucide="file-text" style="width:24px;height:24px; color:var(--text-muted);"></i>`;
+
+                        card.innerHTML = `
+                            <div class="compact-img-container">
+                                ${imgHTML}
+                            </div>
+                            <div>
+                                <h3>${item.headline}</h3>
+                                <p>${item.lead}</p>
+                                <span class="author-tag">Ulat ni ${item.author}</span>
+                            </div>
+                        `;
                 }
                 container.appendChild(card);
             });
