@@ -571,7 +571,7 @@ function renderCategoryPage(page) {
                     <div class="compact-meta">
                         <span>${escapeHtml(art.date)}</span>
                         <span>•</span>
-                        <span>Ulat ni ${escapeHtml(art.author)}</span>
+                        <span>${escapeHtml(art.author)}</span>
                     </div>
                     <h2 class="compact-headline">${escapeHtml(art.title)}</h2>
                     <p class="compact-excerpt">${escapeHtml(art.lead)}</p>
